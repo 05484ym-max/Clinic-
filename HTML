@@ -1,1 +1,675 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Miriam Omisi | קליניקת קוסמטיקה יוקרתית</title>
 
+<!-- ========================================================= -->
+<!-- ייבוא פונטים: פונט סריפי אלגנטי ללוגו + פונט נקי לטקסט -->
+<!-- ========================================================= -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Assistant:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* =========================================================
+     הגדרות בסיס כלליות
+  ========================================================= */
+  :root{
+    --gold: #C9A227;              /* גוון זהב בסיסי - עשיר ומתכתי יותר */
+    --gold-light: #F4E5A3;        /* גוון זהב בהיר להברקה/הובר */
+    --gold-deep: #8A6A1E;         /* גוון זהב כהה לעומק המראה המתכתי */
+    /* גרדיאנט זהב אמיתי - משמש לכותרות וללוגו */
+    --gold-gradient: linear-gradient(135deg, #8A6A1E 0%, #D4AF37 22%, #F4E5A3 45%, #C9A227 60%, #FBF0C4 75%, #9B7A22 100%);
+    --black: #000000;
+    --black-soft: #0d0d0d;
+    --white: #ffffff;
+  }
+
+  /* מחלקת עזר: טקסט בגרדיאנט זהב מתכתי (לכותרות ולוגו) */
+  .gold-metal{
+    background: var(--gold-gradient);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--gold);
+  }
+
+  *{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+  }
+
+  html{
+    scroll-behavior: smooth; /* גלילה חלקה בין אזורי הדף */
+  }
+
+  body{
+    background-color: var(--black);
+    color: var(--white);
+    font-family: 'Assistant', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* =========================================================
+     תפריט עליון (Header) קבוע בראש הדף
+  ========================================================= */
+  header{
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1000;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end; /* דוחף את כל תוכן ה-Header לצד ימין */
+    padding: 22px 6%;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(212,175,55,0.25);
+  }
+
+  /* --- כפתור המבורגר (שלושה פסים) - ממוקם בצד ימין למעלה --- */
+  .hamburger{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:6px;
+    cursor:pointer;
+    width: 40px;
+    height: 40px;
+    z-index: 1100;
+  }
+  .hamburger span{
+    display:block;
+    width: 32px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold-deep), var(--gold-light));
+    transition: all 0.35s ease;
+  }
+  /* אנימציית X בעת פתיחת התפריט */
+  .hamburger.active span:nth-child(1){
+    transform: translateY(8px) rotate(45deg);
+  }
+  .hamburger.active span:nth-child(2){
+    opacity:0;
+  }
+  .hamburger.active span:nth-child(3){
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  /* --- תפריט נפתח (Dropdown) --- */
+  /* התפריט תופס שליש מרוחב הדף (בדסקטופ), עם רקע שקוף-מטושטש (זכוכית) כך שהתוכן מאחוריו נראה */
+  .nav-menu{
+    position: fixed;
+    top: 0;
+    right: -33.334%;
+    width: 33.334%;
+    height: 100vh;
+    background: rgba(10, 8, 2, 0.55); /* שכבת זכוכית שקופה עם גוון חם */
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-left: 1px solid rgba(212,175,55,0.35);
+    box-shadow: -20px 0 60px rgba(0,0,0,0.4);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    padding: 70px 5% 0;
+    transition: right 0.5s cubic-bezier(.77,0,.18,1);
+    z-index: 1050;
+  }
+  .nav-menu.open{
+    right: 0;
+  }
+  /* עמודת הקישורים + הקו האנכי לצידה, בהשראת השרטוט */
+  .nav-menu-list{
+    position: relative;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap: 20px;
+    padding-right: 34px;
+  }
+  /* הקו האנכי הרציף לצד הכיתוב */
+  .nav-menu-list::before{
+    content:'';
+    position:absolute;
+    top:0;
+    right:0;
+    width: 1px;
+    height: 100%;
+    background: var(--gold);
+    opacity: 0.8;
+  }
+  .nav-menu a{
+    color: var(--gold);
+    text-decoration:none;
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: right;
+    white-space: nowrap;
+    position: relative;
+    transition: color 0.3s ease;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.6); /* קריאות מעל התוכן השקוף מאחור */
+  }
+  .nav-menu a:hover{
+    color: var(--gold-light);
+  }
+
+
+
+  /* שכבה שקופה מאוד מעל שאר הדף כשהתפריט פתוח (רק לצורך סגירה בלחיצה מחוץ לתפריט, כמעט בלתי מורגשת) */
+  .overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.15);
+    opacity:0;
+    pointer-events:none;
+    transition: opacity 0.4s ease;
+    z-index: 1040;
+  }
+  .overlay.show{
+    opacity:1;
+    pointer-events:all;
+  }
+
+  /* מובייל: גם כאן התפריט נשאר בשליש רוחב הדף */
+  @media (max-width: 700px){
+    .nav-menu{
+      width: 33.334%;
+      right: -33.334%;
+    }
+    .nav-menu.open{
+      right: 0;
+    }
+  }
+
+  /* =========================================================
+     אזור פתיחה (Hero)
+  ========================================================= */
+  .hero{
+    height: 100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding: 0 20px;
+    background:
+      radial-gradient(ellipse at center, rgba(212,175,55,0.08) 0%, rgba(0,0,0,0) 60%),
+      var(--black);
+  }
+
+  .hero-logo{
+    font-family:'Playfair Display', serif;
+    font-weight: 800;
+    font-size: clamp(42px, 8vw, 90px);
+    letter-spacing: 3px;
+    filter: drop-shadow(0 0 30px rgba(201,162,39,0.45));
+    margin-bottom: 18px;
+  }
+
+  /* קו עדין דקורטיבי מתחת ללוגו */
+  .hero-divider{
+    width: 90px;
+    height: 2px;
+    background: var(--gold);
+    margin: 10px 0 22px;
+  }
+
+  /* ✏️ כותרת המשנה בעמוד הפתיחה - שנה כאן את המשפט שמופיע מתחת ללוגו */
+  .hero-subtitle{
+    font-size: clamp(16px, 2.2vw, 22px);
+    font-weight: 300;
+    color: var(--white);
+    letter-spacing: 2px;
+  }
+
+  .hero-scroll-hint{
+    position:absolute;
+    bottom: 40px;
+    color: var(--gold);
+    font-size: 13px;
+    letter-spacing: 3px;
+    opacity: 0.7;
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce{
+    0%,100%{ transform: translateY(0); }
+    50%{ transform: translateY(-10px); }
+  }
+
+  /* =========================================================
+     כותרות משותפות לכל הסקשנים
+  ========================================================= */
+  .section{
+    padding: 120px 8%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-title{
+    font-family:'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 48px);
+    text-align:center;
+    margin-bottom: 16px;
+    font-weight: 700;
+  }
+
+  .section-divider{
+    width: 70px;
+    height: 2px;
+    background: var(--gold);
+    margin: 0 auto 60px;
+    opacity: 0.7;
+  }
+
+  /* =========================================================
+     אזור "אודות"
+  ========================================================= */
+  #about{
+    text-align:center;
+  }
+
+  /* ✏️ פסקת "אודות" - כתבי כאן על הסיפור האישי / הרקע המקצועי שלך */
+  .about-text{
+    font-size: 19px;
+    line-height: 1.9;
+    font-weight: 300;
+    color: #e5e5e5;
+    max-width: 780px;
+    margin: 0 auto 50px;
+  }
+
+  /* שורת יתרונות / מומחיות קצרה מתחת לטקסט האודות */
+  .about-highlights{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap: 40px;
+    margin-top: 40px;
+  }
+  .highlight-item{
+    min-width: 140px;
+  }
+  .highlight-item .num{
+    font-family:'Playfair Display', serif;
+    font-size: 34px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  /* ✏️ תוויות מתחת למספרים בסקשן "אודות" - שנה לפי הצורך */
+  .highlight-item .label{
+    font-size: 14px;
+    color: #bbbbbb;
+    letter-spacing: 1px;
+    margin-top: 6px;
+  }
+
+  /* =========================================================
+     אזור "עבודות לדוגמה" - גלריית קוביות
+  ========================================================= */
+  .gallery-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .gallery-item{
+    position:relative;
+    aspect-ratio: 1 / 1;
+    overflow:hidden;
+    border: 1px solid rgba(212,175,55,0.25);
+    cursor:pointer;
+  }
+
+  .gallery-item img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transition: transform 0.6s ease, filter 0.6s ease;
+    filter: grayscale(20%) brightness(0.85);
+  }
+
+  .gallery-item:hover img{
+    transform: scale(1.08);
+    filter: grayscale(0%) brightness(1);
+  }
+
+  .gallery-caption{
+    position:absolute;
+    bottom:0;
+    right:0;
+    left:0;
+    padding: 18px 16px;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    opacity:0;
+    transform: translateY(10px);
+    transition: all 0.4s ease;
+  }
+  .gallery-item:hover .gallery-caption{
+    opacity:1;
+    transform: translateY(0);
+  }
+
+  /* ✏️ כיתובי הקוביות בגלריה - שם הטיפול שמופיע כשעוברים עם העכבר */
+  .gallery-caption span{
+    color: var(--gold);
+    font-weight:600;
+    font-size: 16px;
+    letter-spacing:1px;
+  }
+
+  /* =========================================================
+     אזור "יצירת קשר"
+  ========================================================= */
+  #contact{
+    text-align:center;
+  }
+
+  /* ✏️ פסקת פתיחה בסקשן יצירת קשר - שנה את הטקסט שמזמין לפנות */
+  .contact-text{
+    font-size: 18px;
+    font-weight: 300;
+    color: #e5e5e5;
+    margin-bottom: 45px;
+    line-height: 1.8;
+  }
+
+  .whatsapp-btn{
+    display:inline-flex;
+    align-items:center;
+    gap: 12px;
+    background: var(--gold);
+    color: #000000;
+    text-decoration:none;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 13px 34px;
+    border-radius: 50px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 25px rgba(212,175,55,0.35);
+    transition: all 0.35s ease;
+  }
+  .whatsapp-btn:hover{
+    background: var(--gold-light);
+    box-shadow: 0 0 40px rgba(212,175,55,0.6);
+    transform: translateY(-3px);
+  }
+  .whatsapp-btn svg{
+    width: 19px;
+    height: 19px;
+  }
+
+  /* פרטי קשר נוספים מתחת לכפתור */
+  .contact-details{
+    margin-top: 50px;
+    display:flex;
+    flex-direction:column;
+    gap: 12px;
+    font-size: 15px;
+    color: #bbbbbb;
+    letter-spacing: 0.5px;
+  }
+  /* ✏️ פרטי קשר נוספים (טלפון/כתובת/אינסטגרם) - עדכני כאן */
+  .contact-details a{
+    color: #bbbbbb;
+    text-decoration:none;
+  }
+  .contact-details a:hover{
+    color: var(--gold);
+  }
+
+  /* =========================================================
+     פוטר
+  ========================================================= */
+  footer{
+    text-align:center;
+    padding: 30px 20px;
+    border-top: 1px solid rgba(212,175,55,0.2);
+    font-size: 13px;
+    color: #777;
+    letter-spacing: 1px;
+  }
+  footer span{
+    color: var(--gold);
+  }
+
+  /* =========================================================
+     רספונסיביות למובייל
+  ========================================================= */
+  @media (max-width: 768px){
+    .gallery-grid{
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .section{
+      padding: 90px 6%;
+    }
+    .about-highlights{
+      gap: 26px;
+    }
+  }
+
+  @media (max-width: 480px){
+    .gallery-grid{
+      grid-template-columns: repeat(1, 1fr);
+    }
+    .logo{
+      font-size: 22px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========================================================= -->
+<!-- תפריט עליון -->
+<!-- ========================================================= -->
+<header>
+  <!-- כפתור ההמבורגר בלבד בשורה העליונה, בצד ימין -->
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</header>
+
+<!-- שכבת רקע כהה שמופיעה כשהתפריט פתוח -->
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<!-- תפריט צד נפתח -->
+<nav class="nav-menu" id="navMenu">
+  <div class="nav-menu-list">
+    <!-- ✏️ שמות פריטי התפריט - ניתן לשנות את הטקסט שמופיע בתפריט -->
+    <a href="#about" onclick="scrollToSection('about')">אודות</a>
+    <a href="#gallery" class="nav-gallery-link" onclick="scrollToSection('gallery')">דוגמאות</a>
+    <a href="#contact" onclick="scrollToSection('contact')">יצירת קשר</a>
+  </div>
+</nav>
+
+<!-- ========================================================= -->
+<!-- אזור פתיחה (Hero) -->
+<!-- ========================================================= -->
+<section class="hero" id="home">
+  <div class="hero-logo gold-metal">Miriam Omisi</div>
+  <div class="hero-divider"></div>
+  <!-- ✏️ המשפט הראשי שמופיע בכניסה לאתר - שנה כאן -->
+  <div class="hero-subtitle">קליניקת קוסמטיקה יוקרתית | טיפוח, יופי ומקצועיות</div>
+  <div class="hero-scroll-hint">גללי למטה ↓</div>
+</section>
+
+<!-- ========================================================= -->
+<!-- אזור אודות -->
+<!-- ========================================================= -->
+<section class="section" id="about">
+  <!-- ✏️ כותרת סקשן "אודות" -->
+  <h2 class="section-title gold-metal">אודות</h2>
+  <div class="section-divider"></div>
+
+  <!-- ✏️ פסקת התוכן המרכזית בסקשן אודות - כתבי כאן על עצמך, הניסיון וההשכלה שלך -->
+  <p class="about-text">
+    ברוכים הבאים לקליניקה בוטיק שמאמינה שיופי אמיתי מתחיל בטיפול מדויק, מקצועי ואישי.
+    עם שנים של ניסיון בעולם הקוסמטיקה והאסתטיקה, אני מלווה כל מטופלת במסע אישי להשגת
+    התוצאה הטובה ביותר עבורה - תוך שימוש בטכנולוגיות המתקדמות ביותר ובחומרים איכותיים בלבד.
+  </p>
+
+  <div class="about-highlights">
+    <div class="highlight-item">
+      <!-- ✏️ מספר שנות ניסיון -->
+      <div class="num">10+</div>
+      <!-- ✏️ תווית מתחת למספרים -->
+      <div class="label">שנות ניסיון</div>
+    </div>
+    <div class="highlight-item">
+      <!-- ✏️ מספר לקוחות מרוצות -->
+      <div class="num">2,000+</div>
+      <div class="label">לקוחות מרוצות</div>
+    </div>
+    <div class="highlight-item">
+      <!-- ✏️ מספר טיפולים / קורסים -->
+      <div class="num">15+</div>
+      <div class="label">סוגי טיפולים</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================= -->
+<!-- אזור עבודות לדוגמה (גלריה) -->
+<!-- ========================================================= -->
+<section class="section" id="gallery">
+  <!-- ✏️ כותרת סקשן "עבודות לדוגמה" -->
+  <h2 class="section-title gold-metal">עבודות לדוגמה</h2>
+  <div class="section-divider"></div>
+
+  <div class="gallery-grid">
+
+    <!-- קובייה 1 -->
+    <div class="gallery-item">
+      <!-- ✏️ להחלפת התמונה: שני את הקישור בתוך src="..." לתמונה שלך -->
+      <img src="https://images.unsplash.com/photo-1616394158624-274a4b1a4a37?w=600&q=80" alt="טיפול פנים">
+      <div class="gallery-caption">
+        <!-- ✏️ כיתוב התמונה - שם הטיפול -->
+        <span>טיפולי פנים</span>
+      </div>
+    </div>
+
+    <!-- קובייה 2 -->
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1596704017254-9b121068fb31?w=600&q=80" alt="גבות וריסים">
+      <div class="gallery-caption">
+        <span>גבות וריסים</span>
+      </div>
+    </div>
+
+    <!-- קובייה 3 -->
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=600&q=80" alt="איפור מקצועי">
+      <div class="gallery-caption">
+        <span>איפור מקצועי</span>
+      </div>
+    </div>
+
+    <!-- קובייה 4 -->
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1519415943484-9fa1873496d4?w=600&q=80" alt="טיפוח ציפורניים">
+      <div class="gallery-caption">
+        <span>טיפוח ציפורניים</span>
+      </div>
+    </div>
+
+    <!-- קובייה 5 -->
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1519669556878-63bdad8a1a49?w=600&q=80" alt="טיפולי גוף">
+      <div class="gallery-caption">
+        <span>טיפולי גוף</span>
+      </div>
+    </div>
+
+    <!-- קובייה 6 -->
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&q=80" alt="עיצוב שיער">
+      <div class="gallery-caption">
+        <span>עיצוב שיער</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ========================================================= -->
+<!-- אזור יצירת קשר -->
+<!-- ========================================================= -->
+<section class="section" id="contact">
+  <!-- ✏️ כותרת סקשן "יצירת קשר" -->
+  <h2 class="section-title gold-metal">יצירת קשר</h2>
+  <div class="section-divider"></div>
+
+  <!-- ✏️ פסקת ההזמנה לפנייה - שנה כאן את הטקסט -->
+  <p class="contact-text">
+    מוזמנת לקבוע תור, לשאול שאלה או פשוט להכיר.<br>
+    אני כאן בשבילך - לחצי על הכפתור ונדבר בוואטסאפ.
+  </p>
+
+  <!-- ✏️ קישור הוואטסאפ - שני את המספר 972501234567 למספר הטלפון שלך (בפורמט בינלאומי, בלי + ובלי אפסים מובילים) -->
+  <a href="https://wa.me/972501234567" target="_blank" class="whatsapp-btn">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.8a8.1 8.1 0 0 1 8.11 8.11c0 4.48-3.64 8.11-8.12 8.11a8.06 8.06 0 0 1-4.1-1.12l-.3-.17-3.12.82.83-3.04-.19-.3a8.05 8.05 0 0 1-1.24-4.3c0-4.48 3.65-8.11 8.13-8.11M8.53 7.33c-.16 0-.43.06-.66.31s-.87.86-.87 2.07.89 2.39 1.02 2.56c.12.16 1.75 2.68 4.29 3.65 2.12.81 2.55.65 3.01.61.46-.05 1.49-.61 1.7-1.19.21-.58.21-1.08.15-1.19-.07-.1-.24-.16-.5-.29s-1.49-.74-1.72-.82c-.23-.08-.4-.13-.57.13-.16.26-.65.82-.8.99-.15.16-.29.18-.55.06-.26-.13-1.09-.4-2.09-1.29-.77-.69-1.29-1.53-1.44-1.79-.15-.26-.02-.4.11-.53.12-.12.26-.31.4-.47.13-.16.17-.26.26-.44.09-.18.04-.34-.02-.47-.06-.13-.57-1.42-.79-1.94-.2-.5-.42-.44-.57-.44Z"/></svg>
+    <!-- ✏️ הטקסט בתוך כפתור הוואטסאפ -->
+    <span>דברי איתי בוואטסאפ</span>
+  </a>
+
+  <div class="contact-details">
+    <!-- ✏️ מספר טלפון להצגה (לא לחיץ, רק תצוגה) -->
+    <div>טלפון: 050-1234567</div>
+    <!-- ✏️ כתובת הקליניקה -->
+    <div>כתובת: רחוב הדוגמה 1, תל אביב</div>
+    <!-- ✏️ קישור לאינסטגרם - שנה את הקישור לפרופיל שלך -->
+    <a href="https://instagram.com" target="_blank">Instagram: @miriam.omisi</a>
+  </div>
+</section>
+
+<!-- ========================================================= -->
+<!-- פוטר -->
+<!-- ========================================================= -->
+<footer>
+  <!-- ✏️ טקסט הפוטר - זכויות יוצרים -->
+  © 2026 <span>Miriam Omisi</span> | כל הזכויות שמורות
+</footer>
+
+<!-- ========================================================= -->
+<!-- קוד JavaScript לפתיחת תפריט וגלילה חלקה -->
+<!-- ========================================================= -->
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navMenu = document.getElementById('navMenu');
+  const overlay = document.getElementById('overlay');
+
+  // פתיחה/סגירה של תפריט ההמבורגר
+  function toggleMenu(){
+    hamburger.classList.toggle('active');
+    navMenu.classList.toggle('open');
+    overlay.classList.toggle('show');
+  }
+
+  // גלילה חלקה לאזור המבוקש + סגירת התפריט אחרי לחיצה
+  function scrollToSection(id){
+    const el = document.getElementById(id);
+    if(el){
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+    // סגירת התפריט אחרי הבחירה
+    hamburger.classList.remove('active');
+    navMenu.classList.remove('open');
+    overlay.classList.remove('show');
+  }
+</script>
+
+</body>
+</html>
