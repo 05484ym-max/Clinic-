@@ -30,6 +30,16 @@
     --text-dark-soft: #6B5A30;
   }
 
+  /* ✏️ הדגשה נוספת לכל הכתב בזהב - זוהר עדין באותו גוון זהב, בלי לשנות את הצבע עצמו */
+  .gold-metal,
+  .nav-menu a,
+  .hero-scroll-hint,
+  .highlight-item .num,
+  .gallery-caption span,
+  footer span{
+    filter: drop-shadow(0 0 6px rgba(169,120,30,0.55));
+  }
+
   /* מחלקת עזר: טקסט בגרדיאנט זהב מתכתי (לכותרות ולוגו) */
   .gold-metal{
     background: var(--gold-gradient);
@@ -279,6 +289,7 @@
   .hero-scroll-hint{
     position:absolute;
     bottom: 40px;
+    font-weight: 700;
     background: var(--gold-gradient);
     background-size: 200% auto;
     -webkit-background-clip: text;
