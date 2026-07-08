@@ -17,11 +17,11 @@
      הגדרות בסיס כלליות
   ========================================================= */
   :root{
-    --gold: #B8860B;              /* ✏️ גוון זהב בסיסי - עשיר ואמיתי יותר, כמו זהב מתכתי אמיתי */
-    --gold-light: #E9C767;        /* ✏️ גוון זהב בהיר להברקה/הובר - כמו הברקת אור על מתכת */
-    --gold-deep: #5C4308;         /* ✏️ גוון זהב כהה לעומק המראה המתכתי */
-    /* גרדיאנט זהב אמיתי - משמש לכותרות וללוגו וגם לטקסטים אחרים */
-    --gold-gradient: linear-gradient(135deg, #5C4308 0%, #A9790E 18%, #F1D580 38%, #B8860B 52%, #F1D580 65%, #9C7209 82%, #5C4308 100%);
+    --gold: #E0930A;              /* ✏️ זהב חזק וצבעוני מאוד */
+    --gold-light: #F0B93E;        /* ✏️ זהב בהיר חזק */
+    --gold-deep: #935F04;         /* ✏️ זהב כהה חזק */
+    /* גרדיאנט זהב חזק מאוד - צבע רווי לאורך כל הגרדיאנט */
+    --gold-gradient: linear-gradient(135deg, #935F04 0%, #C77D06 20%, #F0B93E 40%, #E0930A 55%, #F0B93E 70%, #B87406 88%, #935F04 100%);
     --black: #FBF6EA;
     --black-soft: #F7F0DE;
     --white: #ffffff;
@@ -54,6 +54,7 @@
     background-color: var(--black);
     color: var(--text-dark);
     font-family: 'Assistant', sans-serif;
+    font-weight: 600; /* ✏️ טקסט מודגש יותר בכל האתר */
     overflow-x: hidden;
   }
 
@@ -171,7 +172,7 @@
     text-decoration:none;
     font-family: 'Playfair Display', serif;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 700;
     text-align: right;
     white-space: nowrap;
     position: relative;
@@ -246,8 +247,7 @@
 
   /* ✏️ כותרת המשנה בעמוד הפתיחה - שנה כאן את המשפט שמופיע מתחת ללוגו */
   .hero-subtitle{
-    font-size: clamp(16px, 2.2vw, 22px);
-    font-weight: 300;
+    font-weight: 600;
     color: var(--text-dark);
     letter-spacing: 2px;
   }
@@ -284,8 +284,7 @@
     font-family:'Playfair Display', serif;
     font-size: clamp(32px, 5vw, 48px);
     text-align:center;
-    margin-bottom: 16px;
-    font-weight: 700;
+    font-weight: 800;
   }
 
   .section-divider{
@@ -307,7 +306,7 @@
   .about-text{
     font-size: 19px;
     line-height: 1.9;
-    font-weight: 300;
+    font-weight: 600;
     color: var(--text-dark);
     max-width: 780px;
     margin: 0 auto 50px;
@@ -398,7 +397,7 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: var(--gold);
-    font-weight:600;
+    font-weight:700;
     font-size: 16px;
     letter-spacing:1px;
   }
@@ -413,7 +412,7 @@
   /* ✏️ פסקת פתיחה בסקשן יצירת קשר - שנה את הטקסט שמזמין לפנות */
   .contact-text{
     font-size: 18px;
-    font-weight: 300;
+    font-weight: 600;
     color: var(--text-dark);
     margin-bottom: 45px;
     line-height: 1.8;
