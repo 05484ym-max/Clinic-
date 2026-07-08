@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
- <meta name="google-site-verification" content="FTwvBh6S6iE2OS3MoI7iZI_Cx-brbMht9Ki29D3Z6nI" /> 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Miriam Omisi | קליניקת קוסמטיקה יוקרתית</title>
@@ -18,14 +17,17 @@
      הגדרות בסיס כלליות
   ========================================================= */
   :root{
-    --gold: #C9A227;              /* גוון זהב בסיסי - עשיר ומתכתי יותר */
-    --gold-light: #F4E5A3;        /* גוון זהב בהיר להברקה/הובר */
-    --gold-deep: #8A6A1E;         /* גוון זהב כהה לעומק המראה המתכתי */
-    /* גרדיאנט זהב אמיתי - משמש לכותרות וללוגו */
-    --gold-gradient: linear-gradient(135deg, #8A6A1E 0%, #D4AF37 22%, #F4E5A3 45%, #C9A227 60%, #FBF0C4 75%, #9B7A22 100%);
-    --black: #000000;
-    --black-soft: #0d0d0d;
+    --gold: #B8860B;              /* ✏️ גוון זהב בסיסי - עשיר ואמיתי יותר, כמו זהב מתכתי אמיתי */
+    --gold-light: #E9C767;        /* ✏️ גוון זהב בהיר להברקה/הובר - כמו הברקת אור על מתכת */
+    --gold-deep: #5C4308;         /* ✏️ גוון זהב כהה לעומק המראה המתכתי */
+    /* גרדיאנט זהב אמיתי - משמש לכותרות וללוגו וגם לטקסטים אחרים */
+    --gold-gradient: linear-gradient(135deg, #5C4308 0%, #A9790E 18%, #F1D580 38%, #B8860B 52%, #F1D580 65%, #9C7209 82%, #5C4308 100%);
+    --black: #FBF6EA;
+    --black-soft: #F7F0DE;
     --white: #ffffff;
+    /* ✏️ צבע טקסט כהה חדש - גוון חום-זהב עמוק שמשתלב עם רקע השמנת ועם הזהב, קריא ונעים לעין */
+    --text-dark: #4A3A18;
+    --text-dark-soft: #6B5A30;
   }
 
   /* מחלקת עזר: טקסט בגרדיאנט זהב מתכתי (לכותרות ולוגו) */
@@ -50,7 +52,7 @@
 
   body{
     background-color: var(--black);
-    color: var(--white);
+    color: var(--text-dark);
     font-family: 'Assistant', sans-serif;
     overflow-x: hidden;
   }
@@ -68,7 +70,7 @@
     align-items:center;
     justify-content:flex-end; /* דוחף את כל תוכן ה-Header לצד ימין */
     padding: 22px 6%;
-    background: rgba(0,0,0,0.85);
+    background: rgba(251,246,234,0.88);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid rgba(212,175,55,0.25);
   }
@@ -104,18 +106,21 @@
   }
 
   /* --- תפריט נפתח (Dropdown) --- */
-  /* התפריט תופס שליש מרוחב הדף (בדסקטופ), עם רקע שקוף-מטושטש (זכוכית) כך שהתוכן מאחוריו נראה */
+  /* התפריט תופס שליש מרוחב הדף (בדסקטופ), עם רקע שמנת חם (זכוכית) כך שהתוכן מאחוריו נראה */
   .nav-menu{
     position: fixed;
     top: 0;
     right: -33.334%;
     width: 33.334%;
     height: 100vh;
-    background: rgba(10, 8, 2, 0.55); /* שכבת זכוכית שקופה עם גוון חם */
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border-left: 1px solid rgba(212,175,55,0.35);
-    box-shadow: -20px 0 60px rgba(0,0,0,0.4);
+    background: rgba(251, 246, 234, 0.38); /* ✏️ שקוף יותר - מראה זכוכית */
+    backdrop-filter: blur(24px) saturate(160%); /* ✏️ טשטוש חזק יותר + רוויה = מראה זכוכית מחוספסת */
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    border-left: 1px solid rgba(255,255,255,0.4); /* ✏️ קו אור עדין בקצה כמו שפת זכוכית */
+    box-shadow:
+      -20px 0 60px rgba(154,116,20,0.18),
+      inset 1px 0 0 rgba(255,255,255,0.25),
+      inset -40px 0 80px -60px rgba(255,255,255,0.5); /* ✏️ הברקות פנימיות שיוצרות עומק של זכוכית */
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -126,6 +131,14 @@
   }
   .nav-menu.open{
     right: 0;
+  }
+  /* ✏️ פס אור אלכסוני עדין שנע על פני התפריט - מדמה השתקפות אור על זכוכית */
+  .nav-menu::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.18) 48%, rgba(255,255,255,0.05) 55%, transparent 70%);
+    pointer-events:none;
   }
   /* עמודת הקישורים + הקו האנכי לצידה, בהשראת השרטוט */
   .nav-menu-list{
@@ -148,7 +161,13 @@
     opacity: 0.8;
   }
   .nav-menu a{
-    color: var(--gold);
+    /* ✏️ זהב מתכתי אמיתי (גרדיאנט) במקום צבע זהב שטוח */
+    background: var(--gold-gradient);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--gold-deep);
     text-decoration:none;
     font-family: 'Playfair Display', serif;
     font-size: 15px;
@@ -156,11 +175,10 @@
     text-align: right;
     white-space: nowrap;
     position: relative;
-    transition: color 0.3s ease;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.6); /* קריאות מעל התוכן השקוף מאחור */
+    transition: background-position 0.4s ease;
   }
   .nav-menu a:hover{
-    color: var(--gold-light);
+    background-position: right center; /* ✏️ הבהוב הזהב זז בהובר, כמו הברקה על מתכת */
   }
 
 
@@ -204,10 +222,7 @@
     padding: 18vh 20px 0;
     background:
       radial-gradient(ellipse at center, rgba(212,175,55,0.12) 0%, rgba(0,0,0,0) 60%),
-      linear-gradient(rgba(0,0,0,0.86), rgba(0,0,0,0.9)),
-      url('nails-bg.jpg') center/cover no-repeat,
       var(--black);
-    background-blend-mode: multiply, multiply, normal, normal;
   }
 
   .hero-logo{
@@ -233,17 +248,22 @@
   .hero-subtitle{
     font-size: clamp(16px, 2.2vw, 22px);
     font-weight: 300;
-    color: var(--white);
+    color: var(--text-dark);
     letter-spacing: 2px;
   }
 
   .hero-scroll-hint{
     position:absolute;
     bottom: 40px;
+    background: var(--gold-gradient);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
     color: var(--gold);
     font-size: 13px;
     letter-spacing: 3px;
-    opacity: 0.7;
+    opacity: 0.85;
     animation: bounce 2s infinite;
   }
   @keyframes bounce{
@@ -288,7 +308,7 @@
     font-size: 19px;
     line-height: 1.9;
     font-weight: 300;
-    color: #e5e5e5;
+    color: var(--text-dark);
     max-width: 780px;
     margin: 0 auto 50px;
   }
@@ -307,13 +327,18 @@
   .highlight-item .num{
     font-family:'Playfair Display', serif;
     font-size: 34px;
+    background: var(--gold-gradient);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
     color: var(--gold);
     font-weight: 700;
   }
   /* ✏️ תוויות מתחת למספרים בסקשן "אודות" - שנה לפי הצורך */
   .highlight-item .label{
     font-size: 14px;
-    color: #bbbbbb;
+    color: var(--text-dark-soft);
     letter-spacing: 1px;
     margin-top: 6px;
   }
@@ -367,6 +392,11 @@
 
   /* ✏️ כיתובי הקוביות בגלריה - שם הטיפול שמופיע כשעוברים עם העכבר */
   .gallery-caption span{
+    background: var(--gold-gradient);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
     color: var(--gold);
     font-weight:600;
     font-size: 16px;
@@ -384,7 +414,7 @@
   .contact-text{
     font-size: 18px;
     font-weight: 300;
-    color: #e5e5e5;
+    color: var(--text-dark);
     margin-bottom: 45px;
     line-height: 1.8;
   }
@@ -421,12 +451,12 @@
     flex-direction:column;
     gap: 12px;
     font-size: 15px;
-    color: #bbbbbb;
+    color: var(--text-dark-soft);
     letter-spacing: 0.5px;
   }
   /* ✏️ פרטי קשר נוספים (טלפון/כתובת/אינסטגרם) - עדכני כאן */
   .contact-details a{
-    color: #bbbbbb;
+    color: var(--text-dark-soft);
     text-decoration:none;
   }
   .contact-details a:hover{
@@ -445,6 +475,11 @@
     letter-spacing: 1px;
   }
   footer span{
+    background: var(--gold-gradient);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
     color: var(--gold);
   }
 
