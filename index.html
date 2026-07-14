@@ -946,8 +946,8 @@
     <!-- שלב 4: פרטי הלקוחה - מוצג רק אחרי שנבחרה שעה -->
     <div class="booking-step" id="step-form" hidden>
       <div class="booking-summary" id="booking-summary"></div>
-      <input type="text" id="apt-name" class="booking-input" placeholder="שם מלא">
-      <input type="tel" id="apt-phone" class="booking-input" placeholder="מספר טלפון">
+      <input type="text" id="apt-name" class="booking-input" placeholder="שם מלא" required>
+      <input type="tel" id="apt-phone" class="booking-input" placeholder="מספר טלפון" required>
       <input type="email" id="apt-email" class="booking-input" placeholder="אימייל (לא חובה, לקבלת אישור)">
       <button id="apt-submit" class="whatsapp-btn booking-submit-btn" onclick="submitBooking()">
         <span id="apt-submit-text">קבעי תור</span>
@@ -1046,7 +1046,7 @@
   ========================================================= */
 
   // ✏️ הדבק כאן את כתובת ה-Web App שקיבלת אחרי פריסת ה-Google Apps Script (Code.gs)
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxGIA3x0H9XAcQFPZE81zE3U7pcIpXsALP1kwd0LCCs0Ng9yPzJIl3R8w97ij5xXhC6/exec';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz3oNEgz2a_-igV2XWBDVKqiXeIMjtInla5yLOPDgWA80q1tR9V0yQrpXyuRHrrtCEU/exec';
 
   // ✏️ מספר הוואטסאפ של הקליניקה, לצורך כפתור "שליחת אישור" (בפורמט בינלאומי, בלי + ובלי 0 מוביל)
   const CLINIC_WHATSAPP_NUMBER = '972559487515';
