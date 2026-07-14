@@ -318,6 +318,25 @@
     letter-spacing: 0.5px;
   }
 
+  /* ✏️ כפתור ריבועי חלול (רק מסגרת, בלי מילוי) ליצירת קשר - הצבע נשלט אוטומטית ע"י --gold כמו כל שאר האתר */
+  .hero-contact-btn{
+    margin-top: 16px;
+    background: transparent;
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Assistant', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 12px 40px;
+    border-radius: 10px; /* ✏️ ריבוע עם פינות מעוגלות קלות - לא עיגול מלא כמו כפתור קביעת התור */
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+  .hero-contact-btn:hover{
+    background: var(--gold);
+    color: #000;
+  }
+
   .hero-scroll-hint{
     position:absolute;
     /* ✏️ המרחק מהתחתית - מספר גדול יותר = מרים את הטקסט יותר גבוה */
@@ -941,6 +960,9 @@
   <div class="hero-cta-wrap">
     <button class="whatsapp-btn hero-cta-btn" onclick="openBookingModal()">קביעת תור</button>
     <div class="hero-cta-caption">לקביעת תורים מהירה אוטומטית לחצי כאן</div>
+
+    <!-- ✏️ כפתור חלול (מסגרת בלבד) ליצירת קשר - קופץ לתחתית הדף -->
+    <button class="hero-contact-btn" onclick="scrollToSection('contact')">יצירת קשר</button>
   </div>
 
   <div class="hero-scroll-hint">גללי למטה ↓</div>
