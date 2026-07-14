@@ -921,13 +921,21 @@
 
   <div class="booking-widget">
 
-    <!-- שלב 1: בחירת תאריך -->
-    <div class="booking-step" id="step-date">
+    <!-- שלב 1: בחירת סוג טיפול -->
+    <div class="booking-step" id="step-treatment">
+      <div class="booking-label">בחרי טיפול</div>
+      <select id="apt-treatment" class="booking-date-input">
+        <option value="">טוענת רשימת טיפולים...</option>
+      </select>
+    </div>
+
+    <!-- שלב 2: בחירת תאריך - מוצג רק אחרי שנבחר טיפול -->
+    <div class="booking-step" id="step-date" hidden>
       <div class="booking-label">בחרי תאריך</div>
       <input type="date" id="apt-date" class="booking-date-input">
     </div>
 
-    <!-- שלב 2: בחירת שעה - מוצג רק אחרי שנבחר תאריך -->
+    <!-- שלב 3: בחירת שעה - מוצג רק אחרי שנבחר תאריך -->
     <div class="booking-step" id="step-slots" hidden>
       <div class="booking-label">בחרי שעה</div>
       <div id="slots-loading" class="slots-loading" hidden>טוענת שעות פנויות</div>
@@ -935,21 +943,27 @@
       <div id="slots-container" class="slots-grid"></div>
     </div>
 
-    <!-- שלב 3: פרטי הלקוחה - מוצג רק אחרי שנבחרה שעה -->
+    <!-- שלב 4: פרטי הלקוחה - מוצג רק אחרי שנבחרה שעה -->
     <div class="booking-step" id="step-form" hidden>
       <div class="booking-summary" id="booking-summary"></div>
       <input type="text" id="apt-name" class="booking-input" placeholder="שם מלא">
       <input type="tel" id="apt-phone" class="booking-input" placeholder="מספר טלפון">
+      <input type="email" id="apt-email" class="booking-input" placeholder="אימייל (לא חובה, לקבלת אישור)">
       <button id="apt-submit" class="whatsapp-btn booking-submit-btn" onclick="submitBooking()">
         <span id="apt-submit-text">קבעי תור</span>
         <span id="apt-spinner" class="apt-spinner" hidden></span>
       </button>
     </div>
 
-    <!-- שלב 4: הודעת הצלחה -->
+    <!-- שלב 5: הודעת הצלחה -->
     <div class="booking-step" id="step-success" hidden>
       <div class="booking-success-icon">✓</div>
-      <p>התור נקבע בהצלחה!<br>ניצור איתך קשר לאישור סופי.</p>
+      <p id="success-text">התור נקבע בהצלחה!</p>
+      <!-- ✏️ כפתור וואטסאפ מוכן-מראש לשליחת אישור מהיר, עם פרטי התור כבר ממולאים -->
+      <a id="success-whatsapp-btn" class="whatsapp-btn" target="_blank" style="margin-top:18px;">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.8a8.1 8.1 0 0 1 8.11 8.11c0 4.48-3.64 8.11-8.12 8.11a8.06 8.06 0 0 1-4.1-1.12l-.3-.17-3.12.82.83-3.04-.19-.3a8.05 8.05 0 0 1-1.24-4.3c0-4.48 3.65-8.11 8.13-8.11M8.53 7.33c-.16 0-.43.06-.66.31s-.87.86-.87 2.07.89 2.39 1.02 2.56c.12.16 1.75 2.68 4.29 3.65 2.12.81 2.55.65 3.01.61.46-.05 1.49-.61 1.7-1.19.21-.58.21-1.08.15-1.19-.07-.1-.24-.16-.5-.29s-1.49-.74-1.72-.82c-.23-.08-.4-.13-.57.13-.16.26-.65.82-.8.99-.15.16-.29.18-.55.06-.26-.13-1.09-.4-2.09-1.29-.77-.69-1.29-1.53-1.44-1.79-.15-.26-.02-.4.11-.53.12-.12.26-.31.4-.47.13-.16.17-.26.26-.44.09-.18.04-.34-.02-.47-.06-.13-.57-1.42-.79-1.94-.2-.5-.42-.44-.57-.44Z"/></svg>
+        <span>שליחת אישור בוואטסאפ</span>
+      </a>
     </div>
 
     <!-- הודעת שגיאה, מוצגת רק כשמשהו נכשל -->
@@ -1032,9 +1046,13 @@
   ========================================================= */
 
   // ✏️ הדבק כאן את כתובת ה-Web App שקיבלת אחרי פריסת ה-Google Apps Script (Code.gs)
-  // דוגמה: 'https://script.google.com/macros/s/XXXXXXXXXXXXXXXX/exec'
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbztvoL6XHlE7rmcyBxc1WtWdPoqSGGe5QALd3d21nQV_m65ZdOQVwoe1W-Nv_N1RzZXkw/exec';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwDwloN76XqpSMcj8lRioRULmHds_gPBmn4qKXi0xMtZot3fdLjzNz5YE1b-ma7GfVE/exec';
 
+  // ✏️ מספר הוואטסאפ של הקליניקה, לצורך כפתור "שליחת אישור" (בפורמט בינלאומי, בלי + ובלי 0 מוביל)
+  const CLINIC_WHATSAPP_NUMBER = '972559487515';
+
+  const treatmentSelect = document.getElementById('apt-treatment');
+  const stepDate = document.getElementById('step-date');
   const dateInput = document.getElementById('apt-date');
   const stepSlots = document.getElementById('step-slots');
   const slotsContainer = document.getElementById('slots-container');
@@ -1044,13 +1062,16 @@
   const bookingSummary = document.getElementById('booking-summary');
   const nameInput = document.getElementById('apt-name');
   const phoneInput = document.getElementById('apt-phone');
+  const emailInput = document.getElementById('apt-email');
   const submitBtn = document.getElementById('apt-submit');
   const submitText = document.getElementById('apt-submit-text');
   const spinner = document.getElementById('apt-spinner');
   const stepSuccess = document.getElementById('step-success');
+  const successWhatsappBtn = document.getElementById('success-whatsapp-btn');
   const errorBox = document.getElementById('booking-error');
   const errorText = document.getElementById('booking-error-text');
 
+  let selectedTreatment = null;
   let selectedDate = null;
   let selectedTime = null;
 
@@ -1063,29 +1084,78 @@
     dateInput.min = `${yyyy}-${mm}-${dd}`;
   })();
 
+  // טוענת את רשימת הטיפולים מהשרת ומציגה אותה בתפריט הנפתח
+  async function loadTreatments(){
+    try{
+      const res = await fetch(`${APPS_SCRIPT_URL}?action=getTreatments`);
+      const data = await res.json();
+
+      treatmentSelect.innerHTML = '<option value="">בחרי טיפול...</option>';
+
+      if(!data.success || !data.treatments || data.treatments.length === 0){
+        treatmentSelect.innerHTML = '<option value="">אין טיפולים זמינים כרגע</option>';
+        return;
+      }
+
+      data.treatments.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t.name;
+        opt.textContent = `${t.name} (${t.duration} דק')`;
+        treatmentSelect.appendChild(opt);
+      });
+
+    }catch(err){
+      treatmentSelect.innerHTML = '<option value="">שגיאה בטעינת הטיפולים</option>';
+    }
+  }
+  loadTreatments();
+
+  treatmentSelect.addEventListener('change', () => {
+    hideError();
+    stepSlots.hidden = true;
+    stepForm.hidden = true;
+    stepSuccess.hidden = true;
+    selectedTime = null;
+
+    if(!treatmentSelect.value){
+      selectedTreatment = null;
+      stepDate.hidden = true;
+      return;
+    }
+    selectedTreatment = treatmentSelect.value;
+    stepDate.hidden = false;
+
+    // אם כבר נבחר תאריך קודם לכן, טוענים שוב שעות פנויות לפי הטיפול החדש
+    if(dateInput.value){
+      selectedDate = dateInput.value;
+      loadSlots(selectedDate, selectedTreatment);
+    }
+  });
+
   dateInput.addEventListener('change', () => {
     hideError();
     stepForm.hidden = true;
     stepSuccess.hidden = true;
     selectedTime = null;
 
-    if(!dateInput.value){
+    if(!dateInput.value || !selectedTreatment){
       stepSlots.hidden = true;
       return;
     }
     selectedDate = dateInput.value;
-    loadSlots(selectedDate);
+    loadSlots(selectedDate, selectedTreatment);
   });
 
-  // טוענת שעות פנויות מה-Apps Script עבור תאריך נבחר
-  async function loadSlots(dateStr){
+  // טוענת שעות פנויות מה-Apps Script עבור תאריך + טיפול נבחרים
+  async function loadSlots(dateStr, treatmentName){
     stepSlots.hidden = false;
     slotsContainer.innerHTML = '';
     slotsEmpty.hidden = true;
     slotsLoading.hidden = false;
 
     try{
-      const res = await fetch(`${APPS_SCRIPT_URL}?action=getSlots&date=${encodeURIComponent(dateStr)}`);
+      const url = `${APPS_SCRIPT_URL}?action=getSlots&date=${encodeURIComponent(dateStr)}&treatment=${encodeURIComponent(treatmentName)}`;
+      const res = await fetch(url);
       const data = await res.json();
 
       slotsLoading.hidden = true;
@@ -1123,7 +1193,7 @@
 
     const dateObj = new Date(selectedDate);
     const formattedDate = dateObj.toLocaleDateString('he-IL', { day:'numeric', month:'long', year:'numeric' });
-    bookingSummary.textContent = `תור ל-${formattedDate} בשעה ${time}`;
+    bookingSummary.textContent = `${selectedTreatment} · ${formattedDate} בשעה ${time}`;
 
     stepForm.hidden = false;
     stepSuccess.hidden = true;
@@ -1136,13 +1206,14 @@
     hideError();
     const name = nameInput.value.trim();
     const phone = phoneInput.value.trim();
+    const email = emailInput.value.trim();
 
     if(!name || !phone){
       showError('נא למלא שם וטלפון');
       return;
     }
-    if(!selectedDate || !selectedTime){
-      showError('נא לבחור תאריך ושעה');
+    if(!selectedTreatment || !selectedDate || !selectedTime){
+      showError('נא לבחור טיפול, תאריך ושעה');
       return;
     }
 
@@ -1157,8 +1228,10 @@
           action: 'bookAppointment',
           date: selectedDate,
           time: selectedTime,
+          treatment: selectedTreatment,
           name: name,
-          phone: phone
+          phone: phone,
+          email: email
         })
       });
       const data = await res.json();
@@ -1169,6 +1242,18 @@
         showError(data.error || 'אירעה שגיאה, אנא נסי שוב');
         return;
       }
+
+      // בניית כפתור וואטסאפ מוכן-מראש עם פרטי התור, לשליחת אישור מהיר מהקליניקה ללקוחה
+      const dateObj = new Date(selectedDate);
+      const formattedDate = dateObj.toLocaleDateString('he-IL', { day:'numeric', month:'long', year:'numeric' });
+      const waMessage = encodeURIComponent(
+        `היי ${name}! התור שלך ל${selectedTreatment} אושר בתאריך ${formattedDate} בשעה ${selectedTime}. מחכה לך :)`
+      );
+      successWhatsappBtn.href = `https://wa.me/${CLINIC_WHATSAPP_NUMBER}?text=${waMessage}`;
+
+      document.getElementById('success-text').textContent = email
+        ? 'התור נקבע בהצלחה! נשלח אישור למייל שלך.'
+        : 'התור נקבע בהצלחה!';
 
       stepForm.hidden = true;
       stepSuccess.hidden = false;

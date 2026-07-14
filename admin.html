@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ניהול קליניקה | Miriam Omesi</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Assistant:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ✏️ אותם משתני עיצוב בדיוק כמו באתר הראשי - כדי לשמור על התאמה מלאה */
+  :root{
+    --gold: #A9781E;
+    --gold-light: #E8CD8A;
+    --gold-deep: #4E3308;
+    --gold-gradient: linear-gradient(135deg, #4E3308 0%, #8A6113 18%, #C6A247 34%, #A9781E 48%, #F2E3B8 58%, #A9781E 68%, #7A5410 84%, #4E3308 100%);
+    --black: #FBF6EA;
+    --text-dark: #4A3A18;
+    --text-dark-soft: #6B5A30;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  body{
+    background-color: var(--black);
+    color: var(--text-dark);
+    font-family: 'Assistant', sans-serif;
+    font-weight: 600;
+    min-height: 100vh;
+    padding: 40px 16px 80px;
+  }
+
+  .gold-metal{
+    background: var(--gold-gradient);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--gold);
+    filter: drop-shadow(0 0 6px rgba(169,120,30,0.55));
+  }
+
+  h1{
+    text-align:center;
+    font-family:'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 30px;
+    margin-bottom: 40px;
+  }
+
+  h2{
+    font-family:'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 18px;
+    color: var(--text-dark);
+  }
+
+  /* כרטיס זכוכית - זהה בסגנון לכרטיס קביעת התור באתר הראשי */
+  .card{
+    max-width: 480px;
+    margin: 0 auto 30px;
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(184,134,11,0.28);
+    border-radius: 24px;
+    padding: 30px 24px;
+    box-shadow: 0 10px 40px rgba(154,116,20,0.15);
+  }
+
+  .field-label{
+    font-family:'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+
+  input, select{
+    width:100%;
+    padding: 13px 16px;
+    border-radius: 14px;
+    border: 1.5px solid rgba(184,134,11,0.4);
+    background: rgba(255,255,255,0.7);
+    color: var(--text-dark);
+    font-family:'Assistant', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    outline:none;
+    margin-bottom: 14px;
+    transition: border-color 0.3s ease;
+  }
+  input:focus, select:focus{
+    border-color: var(--gold);
+  }
+
+  .btn{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 10px;
+    background: var(--gold);
+    color:#000;
+    border:none;
+    text-decoration:none;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 13px 24px;
+    border-radius: 50px;
+    cursor:pointer;
+    box-shadow: 0 0 20px rgba(212,175,55,0.3);
+    transition: all 0.3s ease;
+  }
+  .btn:hover{
+    background: var(--gold-light);
+    transform: translateY(-2px);
+  }
+  .btn:disabled{
+    opacity:0.6;
+    cursor:not-allowed;
+    transform:none;
+  }
+  .btn-secondary{
+    background: transparent;
+    border: 1.5px solid var(--gold);
+    color: var(--gold-deep);
+    box-shadow:none;
+    margin-bottom: 10px;
+  }
+  .btn-secondary:hover{
+    background: rgba(184,134,11,0.1);
+  }
+  .btn-danger{
+    background: transparent;
+    border: none;
+    color:#7A2E14;
+    box-shadow:none;
+    width:auto;
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+  .btn-danger:hover{
+    background: rgba(150,40,20,0.08);
+    transform:none;
+  }
+
+  .row-list{
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .row-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background: rgba(184,134,11,0.08);
+    border: 1px solid rgba(184,134,11,0.25);
+    border-radius: 14px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold-deep);
+  }
+
+  .inline-fields{
+    display:flex;
+    gap: 10px;
+  }
+  .inline-fields > *{
+    flex:1;
+  }
+
+  .empty-note{
+    color: var(--text-dark-soft);
+    font-size: 14px;
+    text-align:center;
+    padding: 10px 0 16px;
+  }
+
+  .status-msg{
+    text-align:center;
+    font-size: 14px;
+    font-weight:700;
+    margin-top: 12px;
+    min-height: 18px;
+  }
+  .status-msg.ok{ color:#2E6B3E; }
+  .status-msg.err{ color:#7A2E14; }
+
+  #login-screen{
+    max-width: 380px;
+    margin: 15vh auto 0;
+    text-align:center;
+  }
+  #app-screen{ display:none; }
+</style>
+</head>
+<body>
+
+<h1 class="gold-metal">ניהול קליניקה</h1>
+
+<!-- מסך כניסה בסיסמה -->
+<div id="login-screen" class="card">
+  <div class="field-label">סיסמת ניהול</div>
+  <input type="password" id="password-input" placeholder="הזיני סיסמה">
+  <button class="btn" onclick="login()">כניסה</button>
+  <div id="login-status" class="status-msg err"></div>
+</div>
+
+<!-- מסך הניהול עצמו, מוצג רק אחרי כניסה מוצלחת -->
+<div id="app-screen">
+
+  <!-- ניהול שעות פנויות -->
+  <div class="card">
+    <h2>שעות פנויות</h2>
+
+    <div class="field-label">בחרי תאריך</div>
+    <input type="date" id="schedule-date">
+
+    <div id="windows-list" class="row-list"></div>
+    <div id="windows-empty" class="empty-note" hidden>אין שעות פתוחות בתאריך זה עדיין</div>
+
+    <div class="field-label">הוספת חלון זמן</div>
+    <div class="inline-fields">
+      <input type="time" id="window-start">
+      <input type="time" id="window-end">
+    </div>
+    <button class="btn btn-secondary" onclick="addWindow()">+ הוספת חלון</button>
+    <button class="btn" onclick="saveSchedule()">שמירת שינויים</button>
+    <div id="schedule-status" class="status-msg"></div>
+  </div>
+
+  <!-- ניהול טיפולים -->
+  <div class="card">
+    <h2>טיפולים ומשך זמן</h2>
+
+    <div id="treatments-list" class="row-list"></div>
+    <div id="treatments-empty" class="empty-note" hidden>אין טיפולים מוגדרים</div>
+
+    <div class="field-label">הוספת טיפול</div>
+    <input type="text" id="new-treatment-name" placeholder="שם הטיפול (למשל: לק ג'ל)">
+    <input type="number" id="new-treatment-duration" placeholder="משך בדקות (למשל: 30)" min="5" step="5">
+    <button class="btn btn-secondary" onclick="addTreatment()">+ הוספת טיפול</button>
+    <button class="btn" onclick="saveTreatments()">שמירת שינויים</button>
+    <div id="treatments-status" class="status-msg"></div>
+  </div>
+
+</div>
+
+<script>
+  // ✏️ אותה כתובת Web App בדיוק כמו באתר הראשי
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwDwloN76XqpSMcj8lRioRULmHds_gPBmn4qKXi0xMtZot3fdLjzNz5YE1b-ma7GfVE/exec';
+
+  let adminPassword = '';
+  let currentWindows = [];
+  let currentTreatments = [];
+
+  const scheduleDate = document.getElementById('schedule-date');
+  const windowsList = document.getElementById('windows-list');
+  const windowsEmpty = document.getElementById('windows-empty');
+  const treatmentsList = document.getElementById('treatments-list');
+  const treatmentsEmpty = document.getElementById('treatments-empty');
+
+  // ברירת מחדל - תאריך של היום בבורר התאריך
+  (function initDate(){
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    scheduleDate.value = `${yyyy}-${mm}-${dd}`;
+    scheduleDate.min = `${yyyy}-${mm}-${dd}`;
+  })();
+
+  async function login(){
+    const pwd = document.getElementById('password-input').value;
+    const statusEl = document.getElementById('login-status');
+    statusEl.textContent = '';
+
+    try{
+      const res = await fetch(`${APPS_SCRIPT_URL}?action=adminGetSchedule&date=${scheduleDate.value}&password=${encodeURIComponent(pwd)}`);
+      const data = await res.json();
+
+      if(!data.success){
+        statusEl.textContent = data.error || 'סיסמה שגויה';
+        return;
+      }
+
+      adminPassword = pwd;
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app-screen').style.display = 'block';
+
+      currentWindows = data.windows || [];
+      renderWindows();
+      loadTreatments();
+
+    }catch(err){
+      statusEl.textContent = 'אירעה שגיאה, נסי שוב';
+    }
+  }
+
+  scheduleDate.addEventListener('change', loadSchedule);
+
+  async function loadSchedule(){
+    setScheduleStatus('');
+    try{
+      const res = await fetch(`${APPS_SCRIPT_URL}?action=adminGetSchedule&date=${scheduleDate.value}&password=${encodeURIComponent(adminPassword)}`);
+      const data = await res.json();
+      if(!data.success){
+        setScheduleStatus(data.error || 'שגיאה בטעינה', true);
+        return;
+      }
+      currentWindows = data.windows || [];
+      renderWindows();
+    }catch(err){
+      setScheduleStatus('שגיאה בטעינה', true);
+    }
+  }
+
+  function renderWindows(){
+    windowsList.innerHTML = '';
+    windowsEmpty.hidden = currentWindows.length > 0;
+
+    currentWindows.forEach((w, i) => {
+      const row = document.createElement('div');
+      row.className = 'row-item';
+      row.innerHTML = `<span>${w.start} - ${w.end}</span>`;
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn btn-danger';
+      delBtn.textContent = 'מחיקה';
+      delBtn.onclick = () => { currentWindows.splice(i, 1); renderWindows(); };
+      row.appendChild(delBtn);
+      windowsList.appendChild(row);
+    });
+  }
+
+  function addWindow(){
+    const start = document.getElementById('window-start').value;
+    const end = document.getElementById('window-end').value;
+    if(!start || !end){
+      setScheduleStatus('נא למלא שעת התחלה וסיום', true);
+      return;
+    }
+    if(start >= end){
+      setScheduleStatus('שעת הסיום חייבת להיות אחרי שעת ההתחלה', true);
+      return;
+    }
+    currentWindows.push({ start, end });
+    currentWindows.sort((a, b) => a.start.localeCompare(b.start));
+    renderWindows();
+    document.getElementById('window-start').value = '';
+    document.getElementById('window-end').value = '';
+  }
+
+  async function saveSchedule(){
+    setScheduleStatus('שומרת...');
+    try{
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'adminSetSchedule',
+          password: adminPassword,
+          date: scheduleDate.value,
+          windows: currentWindows
+        })
+      });
+      const data = await res.json();
+      if(!data.success){
+        setScheduleStatus(data.error || 'שגיאה בשמירה', true);
+        return;
+      }
+      setScheduleStatus('נשמר בהצלחה ✓');
+    }catch(err){
+      setScheduleStatus('שגיאה בשמירה', true);
+    }
+  }
+
+  function setScheduleStatus(msg, isError){
+    const el = document.getElementById('schedule-status');
+    el.textContent = msg;
+    el.className = 'status-msg ' + (isError ? 'err' : 'ok');
+  }
+
+  // ---------------- טיפולים ----------------
+
+  async function loadTreatments(){
+    try{
+      const res = await fetch(`${APPS_SCRIPT_URL}?action=getTreatments`);
+      const data = await res.json();
+      currentTreatments = (data.success && data.treatments) ? data.treatments : [];
+      renderTreatments();
+    }catch(err){
+      setTreatmentsStatus('שגיאה בטעינת הטיפולים', true);
+    }
+  }
+
+  function renderTreatments(){
+    treatmentsList.innerHTML = '';
+    treatmentsEmpty.hidden = currentTreatments.length > 0;
+
+    currentTreatments.forEach((t, i) => {
+      const row = document.createElement('div');
+      row.className = 'row-item';
+      row.innerHTML = `<span>${t.name} — ${t.duration} דק'</span>`;
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn btn-danger';
+      delBtn.textContent = 'מחיקה';
+      delBtn.onclick = () => { currentTreatments.splice(i, 1); renderTreatments(); };
+      row.appendChild(delBtn);
+      treatmentsList.appendChild(row);
+    });
+  }
+
+  function addTreatment(){
+    const name = document.getElementById('new-treatment-name').value.trim();
+    const duration = parseInt(document.getElementById('new-treatment-duration').value, 10);
+    if(!name || !duration || duration <= 0){
+      setTreatmentsStatus('נא למלא שם ומשך זמן תקינים', true);
+      return;
+    }
+    currentTreatments.push({ name, duration });
+    renderTreatments();
+    document.getElementById('new-treatment-name').value = '';
+    document.getElementById('new-treatment-duration').value = '';
+  }
+
+  async function saveTreatments(){
+    setTreatmentsStatus('שומרת...');
+    try{
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'adminSaveTreatments',
+          password: adminPassword,
+          treatments: currentTreatments
+        })
+      });
+      const data = await res.json();
+      if(!data.success){
+        setTreatmentsStatus(data.error || 'שגיאה בשמירה', true);
+        return;
+      }
+      setTreatmentsStatus('נשמר בהצלחה ✓');
+    }catch(err){
+      setTreatmentsStatus('שגיאה בשמירה', true);
+    }
+  }
+
+  function setTreatmentsStatus(msg, isError){
+    const el = document.getElementById('treatments-status');
+    el.textContent = msg;
+    el.className = 'status-msg ' + (isError ? 'err' : 'ok');
+  }
+</script>
+
+</body>
+</html>
