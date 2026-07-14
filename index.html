@@ -17,13 +17,13 @@
      הגדרות בסיס כלליות
   ========================================================= */
   :root{
-    --gold: #A9781E;              /* ✏️ זהב אמיתי - יותר חום-ענברי, פחות צהוב */
-    --gold-light: #E8CD8A;        /* ✏️ הברקה שמפניה-זהובה, לא צהובה בוהקת */
-    --gold-deep: #4E3308;         /* ✏️ ברונזה כהה לעומק */
-    /* גרדיאנט זהב מתכתי אמיתי - בסיס חום-זהוב עם נצנוץ שמפניה עדין, לא צהוב שטוח */
-    --gold-gradient: linear-gradient(135deg, #4E3308 0%, #8A6113 18%, #C6A247 34%, #A9781E 48%, #F2E3B8 58%, #A9781E 68%, #7A5410 84%, #4E3308 100%);
-    --black: #FBF6EA;
-    --black-soft: #F7F0DE;
+    --gold: #96742E;              /* ✏️ זהב עתיק - נטייה לחום-ברונזה, פחות צהוב */
+    --gold-light: #C9A868;        /* ✏️ הברקה - זהב עתיק בהיר, עדיין לא צהוב */
+    --gold-deep: #4A3410;         /* ✏️ ברונזה כהה לעומק */
+    /* גרדיאנט זהב עתיק - כל הגוונים הוזזו לכיוון חום-ברונזה */
+    --gold-gradient: linear-gradient(135deg, #4A3410 0%, #7A5A22 18%, #B99B58 34%, #96742E 48%, #D9C08C 58%, #96742E 68%, #6B4E1C 84%, #4A3410 100%);
+    --black: #F3E9D2;              /* ✏️ שמנת מחוזק - כדי שייראה שמנת גם במסכים זולים, לא לבן */
+    --black-soft: #EFE3C6;
     --white: #ffffff;
     /* ✏️ צבע טקסט כהה חדש - גוון חום-זהב עמוק שמשתלב עם רקע השמנת ועם הזהב, קריא ונעים לעין */
     --text-dark: #4A3A18;
@@ -31,7 +31,7 @@
   }
 
   /* ✏️ הדגשה נוספת לכל הכתב בזהב - זוהר עדין באותו גוון זהב, בלי לשנות את הצבע עצמו */
-  .gold-metal,
+  /* ✏️ זוהר עדין - רק לאלמנטים קטנים (תפריט, כיתובים), לא לכותרות */
   .nav-menu a,
   .hero-scroll-hint,
   .highlight-item .num,
@@ -48,6 +48,7 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: var(--gold);
+    /* ✏️ בלי טשטוש (drop-shadow) - הזהב נשאר חד וברור, לא נראה כמו "פס מרוח" מתחת לכותרת */
   }
 
   *{
@@ -79,7 +80,8 @@
     z-index: 1000;
     display:flex;
     align-items:center;
-    justify-content:flex-end; /* דוחף את כל תוכן ה-Header לצד ימין */
+    /* ✏️ שליטה על צד ההמבורגר: flex-start = ימין | flex-end = שמאל (הפוך מהרגיל כי הדף בעברית/RTL) */
+    justify-content:flex-start;
     padding: 22px 6%;
     background: rgba(251,246,234,0.88);
     backdrop-filter: blur(8px);
@@ -286,9 +288,40 @@
     letter-spacing: 2px;
   }
 
+  .hero-cta-wrap{
+    position: absolute;
+    bottom: 18%; /* ✏️ הועלה טיפה כדי לא להיבלע עם "גללי למטה" */
+    right: 0;
+    left: 0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap: 10px;
+    z-index: 1;
+  }
+
+  .hero-cta-btn{
+    border: none;
+    cursor: pointer;
+    font-family: 'Assistant', sans-serif;
+    font-size: 18px;
+    padding: 17px 24px;
+    width: min(58vw, 230px); /* ✏️ קוצר משמעותית */
+    text-align: center;
+    justify-content: center;
+  }
+
+  .hero-cta-caption{
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark-soft);
+    letter-spacing: 0.5px;
+  }
+
   .hero-scroll-hint{
     position:absolute;
-    bottom: 40px;
+    /* ✏️ המרחק מהתחתית - מספר גדול יותר = מרים את הטקסט יותר גבוה */
+    bottom: 55px;
     font-weight: 700;
     background: var(--gold-gradient);
     background-size: 200% auto;
@@ -320,9 +353,12 @@
     font-size: clamp(32px, 5vw, 48px);
     text-align:center;
     font-weight: 800;
+    /* ✏️ צל דק וחד (בלי טשטוש) לתחושת עומק, בלי להיראות מרוח */
+    filter: drop-shadow(0 1px 0 rgba(78,51,8,0.4));
   }
 
   .section-divider{
+    display:none; /* ✏️ הוסתר - זה היה הקו הדק מתחת לכותרות. אם תרצי להחזיר, פשוט תמחקי את השורה הזו */
     width: 70px;
     height: 2px;
     background: var(--gold);
@@ -476,6 +512,56 @@
   .whatsapp-btn svg{
     width: 19px;
     height: 19px;
+  }
+
+  /* ✏️ שורת אייקונים עגולים ליצירת קשר (וויז/מייל/טלפון/וואטסאפ) */
+  .contact-icons{
+    display:flex;
+    flex-wrap:nowrap; /* ✏️ תמיד בשורה אחת, לא יורדים שורה */
+    justify-content:center;
+    gap: 12px; /* ✏️ המרחק בין העיגולים - מספר קטן יותר = צפוף יותר */
+    margin-top: 20px; /* ✏️ המרחק מהטקסט מעל - מספר קטן יותר = עולה יותר גבוה */
+  }
+  .contact-icon-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap: 8px;
+    text-decoration:none;
+    width: 66px; /* ✏️ רוחב כל פריט - קטן יותר גורם לצפיפות רבה יותר */
+  }
+  /* ✏️ העיגול עצמו - גוון הזהב ואפקט ההברקה בהובר נשלטים כאן */
+  .contact-icon-circle{
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: var(--gold); /* ✏️ צבע זהב אחיד (לא גרדיאנט) - כדי שלא יהיה "פס" אלכסוני */
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color: #1a1204; /* צבע האייקון עצמו - כהה, כדי לבלוט על הזהב */
+    box-shadow: 0 6px 22px rgba(154,116,20,0.35);
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+  .contact-icon-circle svg{
+    width: 27px;
+    height: 27px;
+  }
+  /* ✏️ אייקון הוויז (הפין) - מוגדל ומוזז טיפה, כי צורת הפין "נראית" קטנה יותר משאר האייקונים באותו גודל */
+  .contact-icon-circle svg.icon-waze{
+    width: 32px;
+    height: 32px;
+    transform: translateY(-1px);
+  }
+  .contact-icon-item:hover .contact-icon-circle{
+    transform: translateY(-4px);
+    background: var(--gold-light); /* ✏️ בהובר נהיה גוון זהב בהיר יותר, עדיין אחיד */
+  }
+  /* ✏️ הכיתוב מתחת לכל עיגול (וויז/מייל/וכו') */
+  .contact-icon-item span{
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
   }
 
   /* פרטי קשר נוספים מתחת לכפתור */
@@ -724,6 +810,50 @@
   }
 
   /* =========================================================
+     חלונית קביעת תור (Modal) - נפתחת מהכפתור בעמוד הפתיחה
+  ========================================================= */
+  .booking-modal-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(20,15,5,0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display:none;
+    align-items:flex-start;
+    justify-content:center;
+    z-index: 3000;
+    padding: 30px 16px;
+    overflow-y:auto;
+  }
+  .booking-modal-overlay.show{
+    display:flex;
+  }
+  .booking-modal-card{
+    position:relative;
+    max-width: 460px;
+    width:100%;
+    margin: 4vh auto;
+    background: rgba(251,246,234,0.98);
+    border: 1px solid rgba(184,134,11,0.35);
+    border-radius: 24px;
+    padding: 34px 24px 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    text-align:center;
+  }
+  .booking-modal-close{
+    position:absolute;
+    top: 14px;
+    left: 14px;
+    background:none;
+    border:none;
+    font-size: 20px;
+    color: var(--text-dark-soft);
+    cursor:pointer;
+    width: 32px;
+    height:32px;
+  }
+
+  /* =========================================================
      פוטר
   ========================================================= */
   footer{
@@ -791,7 +921,7 @@
 <nav class="nav-menu" id="navMenu">
   <div class="nav-menu-list">
     <!-- ✏️ שמות פריטי התפריט - ניתן לשנות את הטקסט שמופיע בתפריט -->
-    <a href="#booking" onclick="scrollToSection('booking')">קביעת תור</a>
+    <a href="#booking" onclick="event.preventDefault(); openBookingModal(); hamburger.classList.remove('active'); navMenu.classList.remove('open'); overlay.classList.remove('show');">קביעת תור</a>
     <a href="#about" onclick="scrollToSection('about')">אודות</a>
     <a href="#gallery" class="nav-gallery-link" onclick="scrollToSection('gallery')">דוגמאות</a>
     <a href="#contact" onclick="scrollToSection('contact')">יצירת קשר</a>
@@ -806,8 +936,85 @@
   <div class="hero-divider"></div>
   <!-- ✏️ המשפט הראשי שמופיע בכניסה לאתר - שנה כאן -->
   <div class="hero-subtitle">קליניקת קוסמטיקה יוקרתית | טיפוח, יופי ומקצועיות</div>
+
+  <!-- ✏️ כפתור קביעת תור - בשליש התחתון של המסך, פותח חלונית מיידית -->
+  <div class="hero-cta-wrap">
+    <button class="whatsapp-btn hero-cta-btn" onclick="openBookingModal()">קביעת תור</button>
+    <div class="hero-cta-caption">לקביעת תורים מהירה אוטומטית לחצי כאן</div>
+  </div>
+
   <div class="hero-scroll-hint">גללי למטה ↓</div>
 </section>
+
+<!-- ========================================================= -->
+<!-- חלונית קביעת תור - נפתחת בלחיצה על הכפתור, לא סקשן קבוע בדף -->
+<!-- ========================================================= -->
+<div id="booking-modal-overlay" class="booking-modal-overlay" onclick="if(event.target===this) closeBookingModal()">
+  <div class="booking-modal-card">
+    <button class="booking-modal-close" onclick="closeBookingModal()">✕</button>
+    <h2 class="section-title gold-metal" style="margin-bottom:8px;">קביעת תור</h2>
+
+    <!-- ✏️ פסקת פתיחה בסקשן קביעת תור - שנה את הטקסט לפי הצורך -->
+    <p class="booking-intro">
+      בחרי תאריך ושעה נוחים לך, ואני אאשר את התור בהקדם.
+    </p>
+
+    <div class="booking-widget">
+
+      <!-- שלב 1: בחירת סוג טיפול -->
+      <div class="booking-step" id="step-treatment">
+        <div class="booking-label">בחרי טיפול</div>
+        <select id="apt-treatment" class="booking-date-input">
+          <option value="">טוענת רשימת טיפולים...</option>
+        </select>
+      </div>
+
+      <!-- שלב 2: בחירת תאריך - מוצג רק אחרי שנבחר טיפול -->
+      <div class="booking-step" id="step-date" hidden>
+        <div class="booking-label">בחרי תאריך</div>
+        <input type="date" id="apt-date" class="booking-date-input">
+      </div>
+
+      <!-- שלב 3: בחירת שעה - מוצג רק אחרי שנבחר תאריך -->
+      <div class="booking-step" id="step-slots" hidden>
+        <div class="booking-label">בחרי שעה</div>
+        <div id="slots-loading" class="slots-loading" hidden>טוענת שעות פנויות</div>
+        <div id="slots-empty" class="slots-empty" hidden>אין תורים פנויים בתאריך זה, נסי תאריך אחר</div>
+        <div id="slots-container" class="slots-grid"></div>
+      </div>
+
+      <!-- שלב 4: פרטי הלקוחה - מוצג רק אחרי שנבחרה שעה -->
+      <div class="booking-step" id="step-form" hidden>
+        <div class="booking-summary" id="booking-summary"></div>
+        <input type="text" id="apt-name" class="booking-input" placeholder="שם מלא" required>
+        <input type="tel" id="apt-phone" class="booking-input" placeholder="מספר טלפון" required>
+        <input type="email" id="apt-email" class="booking-input" placeholder="אימייל (לא חובה, לקבלת אישור)">
+        <button id="apt-submit" class="whatsapp-btn booking-submit-btn" onclick="submitBooking()">
+          <span id="apt-submit-text">קבעי תור</span>
+          <span id="apt-spinner" class="apt-spinner" hidden></span>
+        </button>
+      </div>
+
+      <!-- שלב 5: הודעת הצלחה -->
+      <div class="booking-step" id="step-success" hidden>
+        <div class="booking-success-icon">✓</div>
+        <p id="success-text">התור נקבע בהצלחה!</p>
+        <!-- ✏️ כפתור וואטסאפ מוכן-מראש לשליחת אישור מהיר, עם פרטי התור כבר ממולאים -->
+        <a id="success-whatsapp-btn" class="whatsapp-btn" target="_blank" style="margin-top:18px;">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.8a8.1 8.1 0 0 1 8.11 8.11c0 4.48-3.64 8.11-8.12 8.11a8.06 8.06 0 0 1-4.1-1.12l-.3-.17-3.12.82.83-3.04-.19-.3a8.05 8.05 0 0 1-1.24-4.3c0-4.48 3.65-8.11 8.13-8.11M8.53 7.33c-.16 0-.43.06-.66.31s-.87.86-.87 2.07.89 2.39 1.02 2.56c.12.16 1.75 2.68 4.29 3.65 2.12.81 2.55.65 3.01.61.46-.05 1.49-.61 1.7-1.19.21-.58.21-1.08.15-1.19-.07-.1-.24-.16-.5-.29s-1.49-.74-1.72-.82c-.23-.08-.4-.13-.57.13-.16.26-.65.82-.8.99-.15.16-.29.18-.55.06-.26-.13-1.09-.4-2.09-1.29-.77-.69-1.29-1.53-1.44-1.79-.15-.26-.02-.4.11-.53.12-.12.26-.31.4-.47.13-.16.17-.26.26-.44.09-.18.04-.34-.02-.47-.06-.13-.57-1.42-.79-1.94-.2-.5-.42-.44-.57-.44Z"/></svg>
+          <span>שליחת אישור בוואטסאפ</span>
+        </a>
+      </div>
+
+      <!-- הודעת שגיאה, מוצגת רק כשמשהו נכשל -->
+      <div id="booking-error" class="booking-error" hidden>
+        <div id="booking-error-text">אירעה שגיאה, אנא נסי שוב</div>
+        <button class="booking-retry" onclick="hideError()">סגירה</button>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <!-- ========================================================= -->
 <!-- אזור אודות -->
@@ -907,73 +1114,6 @@
   </div>
 </section>
 
-<!-- ========================================================= -->
-<!-- אזור קביעת תור - יומן חכם -->
-<!-- ========================================================= -->
-<section class="section" id="booking">
-  <h2 class="section-title gold-metal">קביעת תור</h2>
-  <div class="section-divider"></div>
-
-  <!-- ✏️ פסקת פתיחה בסקשן קביעת תור - שנה את הטקסט לפי הצורך -->
-  <p class="booking-intro">
-    בחרי תאריך ושעה נוחים לך, ואני אאשר את התור בהקדם.
-  </p>
-
-  <div class="booking-widget">
-
-    <!-- שלב 1: בחירת סוג טיפול -->
-    <div class="booking-step" id="step-treatment">
-      <div class="booking-label">בחרי טיפול</div>
-      <select id="apt-treatment" class="booking-date-input">
-        <option value="">טוענת רשימת טיפולים...</option>
-      </select>
-    </div>
-
-    <!-- שלב 2: בחירת תאריך - מוצג רק אחרי שנבחר טיפול -->
-    <div class="booking-step" id="step-date" hidden>
-      <div class="booking-label">בחרי תאריך</div>
-      <input type="date" id="apt-date" class="booking-date-input">
-    </div>
-
-    <!-- שלב 3: בחירת שעה - מוצג רק אחרי שנבחר תאריך -->
-    <div class="booking-step" id="step-slots" hidden>
-      <div class="booking-label">בחרי שעה</div>
-      <div id="slots-loading" class="slots-loading" hidden>טוענת שעות פנויות</div>
-      <div id="slots-empty" class="slots-empty" hidden>אין תורים פנויים בתאריך זה, נסי תאריך אחר</div>
-      <div id="slots-container" class="slots-grid"></div>
-    </div>
-
-    <!-- שלב 4: פרטי הלקוחה - מוצג רק אחרי שנבחרה שעה -->
-    <div class="booking-step" id="step-form" hidden>
-      <div class="booking-summary" id="booking-summary"></div>
-      <input type="text" id="apt-name" class="booking-input" placeholder="שם מלא" required>
-      <input type="tel" id="apt-phone" class="booking-input" placeholder="מספר טלפון" required>
-      <input type="email" id="apt-email" class="booking-input" placeholder="אימייל (לא חובה, לקבלת אישור)">
-      <button id="apt-submit" class="whatsapp-btn booking-submit-btn" onclick="submitBooking()">
-        <span id="apt-submit-text">קבעי תור</span>
-        <span id="apt-spinner" class="apt-spinner" hidden></span>
-      </button>
-    </div>
-
-    <!-- שלב 5: הודעת הצלחה -->
-    <div class="booking-step" id="step-success" hidden>
-      <div class="booking-success-icon">✓</div>
-      <p id="success-text">התור נקבע בהצלחה!</p>
-      <!-- ✏️ כפתור וואטסאפ מוכן-מראש לשליחת אישור מהיר, עם פרטי התור כבר ממולאים -->
-      <a id="success-whatsapp-btn" class="whatsapp-btn" target="_blank" style="margin-top:18px;">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.8a8.1 8.1 0 0 1 8.11 8.11c0 4.48-3.64 8.11-8.12 8.11a8.06 8.06 0 0 1-4.1-1.12l-.3-.17-3.12.82.83-3.04-.19-.3a8.05 8.05 0 0 1-1.24-4.3c0-4.48 3.65-8.11 8.13-8.11M8.53 7.33c-.16 0-.43.06-.66.31s-.87.86-.87 2.07.89 2.39 1.02 2.56c.12.16 1.75 2.68 4.29 3.65 2.12.81 2.55.65 3.01.61.46-.05 1.49-.61 1.7-1.19.21-.58.21-1.08.15-1.19-.07-.1-.24-.16-.5-.29s-1.49-.74-1.72-.82c-.23-.08-.4-.13-.57.13-.16.26-.65.82-.8.99-.15.16-.29.18-.55.06-.26-.13-1.09-.4-2.09-1.29-.77-.69-1.29-1.53-1.44-1.79-.15-.26-.02-.4.11-.53.12-.12.26-.31.4-.47.13-.16.17-.26.26-.44.09-.18.04-.34-.02-.47-.06-.13-.57-1.42-.79-1.94-.2-.5-.42-.44-.57-.44Z"/></svg>
-        <span>שליחת אישור בוואטסאפ</span>
-      </a>
-    </div>
-
-    <!-- הודעת שגיאה, מוצגת רק כשמשהו נכשל -->
-    <div id="booking-error" class="booking-error" hidden>
-      <div id="booking-error-text">אירעה שגיאה, אנא נסי שוב</div>
-      <button class="booking-retry" onclick="hideError()">סגירה</button>
-    </div>
-
-  </div>
-</section>
 
 <!-- ========================================================= -->
 <!-- אזור יצירת קשר -->
@@ -989,20 +1129,41 @@
     אני כאן בשבילך - לחצי על הכפתור ונדבר בוואטסאפ.
   </p>
 
-  <!-- ✏️ קישור הוואטסאפ - שני את המספר 972501234567 למספר הטלפון שלך (בפורמט בינלאומי, בלי + ובלי אפסים מובילים) -->
-  <a href="https://wa.me/972559487515" target="_blank" class="whatsapp-btn">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.8a8.1 8.1 0 0 1 8.11 8.11c0 4.48-3.64 8.11-8.12 8.11a8.06 8.06 0 0 1-4.1-1.12l-.3-.17-3.12.82.83-3.04-.19-.3a8.05 8.05 0 0 1-1.24-4.3c0-4.48 3.65-8.11 8.13-8.11M8.53 7.33c-.16 0-.43.06-.66.31s-.87.86-.87 2.07.89 2.39 1.02 2.56c.12.16 1.75 2.68 4.29 3.65 2.12.81 2.55.65 3.01.61.46-.05 1.49-.61 1.7-1.19.21-.58.21-1.08.15-1.19-.07-.1-.24-.16-.5-.29s-1.49-.74-1.72-.82c-.23-.08-.4-.13-.57.13-.16.26-.65.82-.8.99-.15.16-.29.18-.55.06-.26-.13-1.09-.4-2.09-1.29-.77-.69-1.29-1.53-1.44-1.79-.15-.26-.02-.4.11-.53.12-.12.26-.31.4-.47.13-.16.17-.26.26-.44.09-.18.04-.34-.02-.47-.06-.13-.57-1.42-.79-1.94-.2-.5-.42-.44-.57-.44Z"/></svg>
-    <!-- ✏️ הטקסט בתוך כפתור הוואטסאפ -->
-    <span>דברי איתי בוואטסאפ</span>
-  </a>
+  <!-- ✏️ שורת אייקונים עגולים ליצירת קשר - כל אחד קישור לחיץ -->
+  <div class="contact-icons">
 
-  <div class="contact-details">
-    <!-- ✏️ מספר טלפון להצגה (לא לחיץ, רק תצוגה) -->
-    <div>טלפון: 055-9487515</div>
-    <!-- ✏️ כתובת הקליניקה -->
-    <div>כתובת: רחוב יהדות איטליה 12 דירה 4, נתיבות</div>
-    <!-- ✏️ קישור לאינסטגרם - שנה את הקישור לפרופיל שלך -->
-    <a href="https://instagram.com" target="_blank">Instagram: @miriam.omisi</a>
+    <!-- ✏️ ניווט בוויז - לשינוי הכתובת, שני את הטקסט אחרי q= (המרווחים כבר מיוצגים כ-+) -->
+    <a href="https://waze.com/ul?q=רחוב+יהדות+איטליה+12+נתיבות" target="_blank" class="contact-icon-item">
+      <div class="contact-icon-circle">
+        <svg class="icon-waze" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <span>וויז</span>
+    </a>
+
+    <!-- ✏️ מייל - שני את הכתובת בשני המקומות (href וגם אם רוצים להציג טקסט אחר) -->
+    <a href="mailto:miriamomesi1992@gmail.com" class="contact-icon-item">
+      <div class="contact-icon-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <span>מייל</span>
+    </a>
+
+    <!-- ✏️ טלפון - שני את המספר אחרי tel: (בלי רווחים ומקפים) -->
+    <a href="tel:+972559487515" class="contact-icon-item">
+      <div class="contact-icon-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </div>
+      <span>טלפון</span>
+    </a>
+
+    <!-- ✏️ וואטסאפ - אותו מספר כמו הכפתור הגדול למעלה -->
+    <a href="https://wa.me/972559487515" target="_blank" class="contact-icon-item">
+      <div class="contact-icon-circle">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.8a8.1 8.1 0 0 1 8.11 8.11c0 4.48-3.64 8.11-8.12 8.11a8.06 8.06 0 0 1-4.1-1.12l-.3-.17-3.12.82.83-3.04-.19-.3a8.05 8.05 0 0 1-1.24-4.3c0-4.48 3.65-8.11 8.13-8.11M8.53 7.33c-.16 0-.43.06-.66.31s-.87.86-.87 2.07.89 2.39 1.02 2.56c.12.16 1.75 2.68 4.29 3.65 2.12.81 2.55.65 3.01.61.46-.05 1.49-.61 1.7-1.19.21-.58.21-1.08.15-1.19-.07-.1-.24-.16-.5-.29s-1.49-.74-1.72-.82c-.23-.08-.4-.13-.57.13-.16.26-.65.82-.8.99-.15.16-.29.18-.55.06-.26-.13-1.09-.4-2.09-1.29-.77-.69-1.29-1.53-1.44-1.79-.15-.26-.02-.4.11-.53.12-.12.26-.31.4-.47.13-.16.17-.26.26-.44.09-.18.04-.34-.02-.47-.06-.13-.57-1.42-.79-1.94-.2-.5-.42-.44-.57-.44Z"/></svg>
+      </div>
+      <span>וואטסאפ</span>
+    </a>
+
   </div>
 </section>
 
@@ -1044,6 +1205,16 @@
   /* =========================================================
      מערכת קביעת תור - מתחברת ל-Google Apps Script
   ========================================================= */
+
+  // ✏️ פתיחה/סגירה של חלונית קביעת התור
+  function openBookingModal(){
+    document.getElementById('booking-modal-overlay').classList.add('show');
+    document.body.style.overflow = 'hidden'; // מונע גלילה של הרקע כשהחלונית פתוחה
+  }
+  function closeBookingModal(){
+    document.getElementById('booking-modal-overlay').classList.remove('show');
+    document.body.style.overflow = '';
+  }
 
   // ✏️ הדבק כאן את כתובת ה-Web App שקיבלת אחרי פריסת ה-Google Apps Script (Code.gs)
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz3oNEgz2a_-igV2XWBDVKqiXeIMjtInla5yLOPDgWA80q1tR9V0yQrpXyuRHrrtCEU/exec';
