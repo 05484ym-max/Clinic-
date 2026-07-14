@@ -498,6 +498,232 @@
   }
 
   /* =========================================================
+     אזור "קביעת תור" - יומן חכם
+  ========================================================= */
+  #booking{
+    text-align:center;
+  }
+
+  .booking-intro{
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 40px;
+    line-height: 1.8;
+  }
+
+  /* הכרטיס המרכזי של היומן - זכוכית עדינה כמו התפריט */
+  .booking-widget{
+    max-width: 460px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(184,134,11,0.28);
+    border-radius: 24px;
+    padding: 34px 26px;
+    box-shadow: 0 10px 40px rgba(154,116,20,0.15);
+    text-align: right;
+  }
+
+  .booking-step{
+    animation: bookingFadeIn 0.5s ease;
+  }
+  .booking-step + .booking-step{
+    margin-top: 30px;
+  }
+
+  @keyframes bookingFadeIn{
+    from{ opacity:0; transform: translateY(10px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  .booking-label{
+    font-family:'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--text-dark);
+    margin-bottom: 14px;
+  }
+
+  /* שדה תאריך - מעוצב לפי שפת האתר */
+  .booking-date-input{
+    width:100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1.5px solid rgba(184,134,11,0.45);
+    background: rgba(255,255,255,0.7);
+    color: var(--text-dark);
+    font-family:'Assistant', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    outline:none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .booking-date-input:focus{
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(184,134,11,0.15);
+  }
+  /* צביעת אייקון הלוח שנה בגוון זהוב, ככל שהדפדפן מאפשר */
+  .booking-date-input::-webkit-calendar-picker-indicator{
+    filter: sepia(1) saturate(4) hue-rotate(0deg) brightness(0.8);
+    cursor:pointer;
+  }
+
+  /* רשת שעות פנויות */
+  .slots-grid{
+    display:flex;
+    flex-wrap:wrap;
+    gap: 10px;
+  }
+  .slot-btn{
+    flex: 0 0 auto;
+    padding: 10px 18px;
+    border-radius: 30px;
+    border: 1.5px solid var(--gold);
+    background: transparent;
+    color: var(--text-dark);
+    font-family:'Assistant', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor:pointer;
+    opacity:0;
+    animation: bookingFadeIn 0.4s ease forwards;
+    transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  }
+  .slot-btn:hover{
+    transform: translateY(-2px);
+  }
+  .slot-btn.selected{
+    background: var(--gold-gradient);
+    background-size: 200% auto;
+    color: #000;
+    box-shadow: 0 0 20px rgba(184,134,11,0.4);
+  }
+
+  .slots-empty, .slots-loading{
+    color: var(--text-dark-soft);
+    font-size: 15px;
+    padding: 10px 0;
+  }
+  /* אנימציית טעינה קטנה של שלוש נקודות */
+  .slots-loading::after{
+    content:'...';
+    animation: bookingDots 1.2s infinite steps(4);
+  }
+  @keyframes bookingDots{
+    0%{ content:''; }
+    25%{ content:'.'; }
+    50%{ content:'..'; }
+    75%{ content:'...'; }
+  }
+
+  .booking-summary{
+    background: rgba(184,134,11,0.08);
+    border: 1px solid rgba(184,134,11,0.25);
+    border-radius: 14px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold-deep);
+    margin-bottom: 18px;
+  }
+
+  .booking-input{
+    width:100%;
+    padding: 13px 16px;
+    border-radius: 14px;
+    border: 1.5px solid rgba(184,134,11,0.35);
+    background: rgba(255,255,255,0.7);
+    color: var(--text-dark);
+    font-family:'Assistant', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    outline:none;
+    margin-bottom: 14px;
+    transition: border-color 0.3s ease;
+  }
+  .booking-input:focus{
+    border-color: var(--gold);
+  }
+  .booking-input::placeholder{
+    color: var(--text-dark-soft);
+    opacity: 0.7;
+  }
+
+  /* משתמש בסגנון כפתור הוואטסאפ הקיים, עם תוספת למרווח */
+  .booking-submit-btn{
+    width:100%;
+    justify-content:center;
+    border:none;
+    cursor:pointer;
+    font-family:'Assistant', sans-serif;
+  }
+  .booking-submit-btn:disabled{
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform:none !important;
+  }
+
+  /* ספינר טעינה קטן בתוך הכפתור */
+  .apt-spinner{
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid rgba(0,0,0,0.25);
+    border-top-color: #000;
+    border-radius: 50%;
+    animation: bookingSpin 0.7s linear infinite;
+    display:inline-block;
+  }
+  @keyframes bookingSpin{
+    to{ transform: rotate(360deg); }
+  }
+
+  .booking-success-icon{
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--gold-gradient);
+    color:#000;
+    font-size: 28px;
+    font-weight: 800;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin: 0 auto 16px;
+  }
+  #step-success{
+    text-align:center;
+    color: var(--text-dark);
+    font-weight: 600;
+    line-height: 1.7;
+  }
+
+  .booking-error{
+    margin-top: 16px;
+    background: rgba(150,40,20,0.08);
+    border: 1px solid rgba(150,40,20,0.3);
+    color: #7A2E14;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align:center;
+  }
+
+  .booking-retry{
+    margin-top: 10px;
+    background:none;
+    border:none;
+    color: var(--gold-deep);
+    text-decoration:underline;
+    font-weight:700;
+    cursor:pointer;
+    font-family:'Assistant', sans-serif;
+    font-size: 14px;
+  }
+
+  /* =========================================================
      פוטר
   ========================================================= */
   footer{
@@ -509,6 +735,7 @@
     letter-spacing: 1px;
   }
   footer span{
+    font-weight: 700;
     background: var(--gold-gradient);
     background-size: 200% auto;
     -webkit-background-clip: text;
@@ -564,6 +791,7 @@
 <nav class="nav-menu" id="navMenu">
   <div class="nav-menu-list">
     <!-- ✏️ שמות פריטי התפריט - ניתן לשנות את הטקסט שמופיע בתפריט -->
+    <a href="#booking" onclick="scrollToSection('booking')">קביעת תור</a>
     <a href="#about" onclick="scrollToSection('about')">אודות</a>
     <a href="#gallery" class="nav-gallery-link" onclick="scrollToSection('gallery')">דוגמאות</a>
     <a href="#contact" onclick="scrollToSection('contact')">יצירת קשר</a>
@@ -680,6 +908,60 @@
 </section>
 
 <!-- ========================================================= -->
+<!-- אזור קביעת תור - יומן חכם -->
+<!-- ========================================================= -->
+<section class="section" id="booking">
+  <h2 class="section-title gold-metal">קביעת תור</h2>
+  <div class="section-divider"></div>
+
+  <!-- ✏️ פסקת פתיחה בסקשן קביעת תור - שנה את הטקסט לפי הצורך -->
+  <p class="booking-intro">
+    בחרי תאריך ושעה נוחים לך, ואני אאשר את התור בהקדם.
+  </p>
+
+  <div class="booking-widget">
+
+    <!-- שלב 1: בחירת תאריך -->
+    <div class="booking-step" id="step-date">
+      <div class="booking-label">בחרי תאריך</div>
+      <input type="date" id="apt-date" class="booking-date-input">
+    </div>
+
+    <!-- שלב 2: בחירת שעה - מוצג רק אחרי שנבחר תאריך -->
+    <div class="booking-step" id="step-slots" hidden>
+      <div class="booking-label">בחרי שעה</div>
+      <div id="slots-loading" class="slots-loading" hidden>טוענת שעות פנויות</div>
+      <div id="slots-empty" class="slots-empty" hidden>אין תורים פנויים בתאריך זה, נסי תאריך אחר</div>
+      <div id="slots-container" class="slots-grid"></div>
+    </div>
+
+    <!-- שלב 3: פרטי הלקוחה - מוצג רק אחרי שנבחרה שעה -->
+    <div class="booking-step" id="step-form" hidden>
+      <div class="booking-summary" id="booking-summary"></div>
+      <input type="text" id="apt-name" class="booking-input" placeholder="שם מלא">
+      <input type="tel" id="apt-phone" class="booking-input" placeholder="מספר טלפון">
+      <button id="apt-submit" class="whatsapp-btn booking-submit-btn" onclick="submitBooking()">
+        <span id="apt-submit-text">קבעי תור</span>
+        <span id="apt-spinner" class="apt-spinner" hidden></span>
+      </button>
+    </div>
+
+    <!-- שלב 4: הודעת הצלחה -->
+    <div class="booking-step" id="step-success" hidden>
+      <div class="booking-success-icon">✓</div>
+      <p>התור נקבע בהצלחה!<br>ניצור איתך קשר לאישור סופי.</p>
+    </div>
+
+    <!-- הודעת שגיאה, מוצגת רק כשמשהו נכשל -->
+    <div id="booking-error" class="booking-error" hidden>
+      <div id="booking-error-text">אירעה שגיאה, אנא נסי שוב</div>
+      <button class="booking-retry" onclick="hideError()">סגירה</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ========================================================= -->
 <!-- אזור יצירת קשר -->
 <!-- ========================================================= -->
 <section class="section" id="contact">
@@ -743,6 +1025,175 @@
     hamburger.classList.remove('active');
     navMenu.classList.remove('open');
     overlay.classList.remove('show');
+  }
+
+  /* =========================================================
+     מערכת קביעת תור - מתחברת ל-Google Apps Script
+  ========================================================= */
+
+  // ✏️ הדבק כאן את כתובת ה-Web App שקיבלת אחרי פריסת ה-Google Apps Script (Code.gs)
+  // דוגמה: 'https://script.google.com/macros/s/XXXXXXXXXXXXXXXX/exec'
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbztvoL6XHlE7rmcyBxc1WtWdPoqSGGe5QALd3d21nQV_m65ZdOQVwoe1W-Nv_N1RzZXkw/exec';
+
+  const dateInput = document.getElementById('apt-date');
+  const stepSlots = document.getElementById('step-slots');
+  const slotsContainer = document.getElementById('slots-container');
+  const slotsLoading = document.getElementById('slots-loading');
+  const slotsEmpty = document.getElementById('slots-empty');
+  const stepForm = document.getElementById('step-form');
+  const bookingSummary = document.getElementById('booking-summary');
+  const nameInput = document.getElementById('apt-name');
+  const phoneInput = document.getElementById('apt-phone');
+  const submitBtn = document.getElementById('apt-submit');
+  const submitText = document.getElementById('apt-submit-text');
+  const spinner = document.getElementById('apt-spinner');
+  const stepSuccess = document.getElementById('step-success');
+  const errorBox = document.getElementById('booking-error');
+  const errorText = document.getElementById('booking-error-text');
+
+  let selectedDate = null;
+  let selectedTime = null;
+
+  // חוסם תאריכי עבר בבורר התאריך (מגביל ל"היום" ואילך)
+  (function blockPastDates(){
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    dateInput.min = `${yyyy}-${mm}-${dd}`;
+  })();
+
+  dateInput.addEventListener('change', () => {
+    hideError();
+    stepForm.hidden = true;
+    stepSuccess.hidden = true;
+    selectedTime = null;
+
+    if(!dateInput.value){
+      stepSlots.hidden = true;
+      return;
+    }
+    selectedDate = dateInput.value;
+    loadSlots(selectedDate);
+  });
+
+  // טוענת שעות פנויות מה-Apps Script עבור תאריך נבחר
+  async function loadSlots(dateStr){
+    stepSlots.hidden = false;
+    slotsContainer.innerHTML = '';
+    slotsEmpty.hidden = true;
+    slotsLoading.hidden = false;
+
+    try{
+      const res = await fetch(`${APPS_SCRIPT_URL}?action=getSlots&date=${encodeURIComponent(dateStr)}`);
+      const data = await res.json();
+
+      slotsLoading.hidden = true;
+
+      if(!data.success){
+        showError(data.error || 'אירעה שגיאה בטעינת השעות הפנויות');
+        return;
+      }
+
+      if(!data.slots || data.slots.length === 0){
+        slotsEmpty.hidden = false;
+        return;
+      }
+
+      data.slots.forEach((time, i) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'slot-btn';
+        btn.textContent = time;
+        btn.style.animationDelay = (i * 0.05) + 's'; // אנימציית כניסה מדורגת רכה
+        btn.addEventListener('click', () => selectSlot(time, btn));
+        slotsContainer.appendChild(btn);
+      });
+
+    }catch(err){
+      slotsLoading.hidden = true;
+      showError('אירעה שגיאה, אנא נסי שוב');
+    }
+  }
+
+  function selectSlot(time, btnEl){
+    selectedTime = time;
+    document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+    btnEl.classList.add('selected');
+
+    const dateObj = new Date(selectedDate);
+    const formattedDate = dateObj.toLocaleDateString('he-IL', { day:'numeric', month:'long', year:'numeric' });
+    bookingSummary.textContent = `תור ל-${formattedDate} בשעה ${time}`;
+
+    stepForm.hidden = false;
+    stepSuccess.hidden = true;
+    hideError();
+    stepForm.scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+
+  // שליחת הבקשה לקביעת התור
+  async function submitBooking(){
+    hideError();
+    const name = nameInput.value.trim();
+    const phone = phoneInput.value.trim();
+
+    if(!name || !phone){
+      showError('נא למלא שם וטלפון');
+      return;
+    }
+    if(!selectedDate || !selectedTime){
+      showError('נא לבחור תאריך ושעה');
+      return;
+    }
+
+    setLoading(true);
+
+    try{
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        // ✏️ text/plain במכוון - מונע בקשת CORS מקדימה (preflight) שחוסמת Google Apps Script
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'bookAppointment',
+          date: selectedDate,
+          time: selectedTime,
+          name: name,
+          phone: phone
+        })
+      });
+      const data = await res.json();
+
+      setLoading(false);
+
+      if(!data.success){
+        showError(data.error || 'אירעה שגיאה, אנא נסי שוב');
+        return;
+      }
+
+      stepForm.hidden = true;
+      stepSuccess.hidden = false;
+      stepSuccess.scrollIntoView({ behavior:'smooth', block:'center' });
+
+    }catch(err){
+      setLoading(false);
+      showError('אירעה שגיאה בשליחה, בדקי את החיבור ונסי שוב');
+    }
+  }
+
+  function setLoading(isLoading){
+    submitBtn.disabled = isLoading;
+    spinner.hidden = !isLoading;
+    submitText.hidden = isLoading;
+  }
+
+  function showError(msg){
+    errorText.textContent = msg;
+    errorBox.hidden = false;
+    errorBox.scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+
+  function hideError(){
+    errorBox.hidden = true;
   }
 </script>
 
