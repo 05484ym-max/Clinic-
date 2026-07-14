@@ -167,6 +167,87 @@
     color: var(--gold-deep);
   }
 
+  /* שורת סקירה של יום בודד בפאנל "מבט קדימה" - לחיצה עליה קופצת לעריכת אותו יום */
+  .overview-row{
+    display:flex;
+    flex-direction:column;
+    gap: 6px;
+    background: rgba(184,134,11,0.06);
+    border: 1px solid rgba(184,134,11,0.2);
+    border-radius: 14px;
+    padding: 12px 16px;
+    cursor:pointer;
+    transition: background 0.25s ease, transform 0.15s ease;
+  }
+  .overview-row:hover{
+    background: rgba(184,134,11,0.14);
+    transform: translateY(-1px);
+  }
+  .overview-row.is-today{
+    border-color: var(--gold);
+    box-shadow: 0 0 0 1px var(--gold) inset;
+  }
+  .overview-day-label{
+    font-family:'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text-dark);
+  }
+  .overview-day-label .today-tag{
+    color: var(--gold-deep);
+    font-size: 12px;
+    font-weight: 700;
+    margin-right: 6px;
+  }
+  .overview-chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap: 6px;
+  }
+  .overview-chip{
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(184,134,11,0.35);
+    color: var(--gold-deep);
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .overview-none{
+    color: var(--text-dark-soft);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .overview-filter{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark-soft);
+    margin-bottom: 14px;
+    cursor:pointer;
+  }
+  .overview-filter input{
+    width:auto;
+    margin:0;
+    accent-color: var(--gold);
+  }
+
+  .overview-month-header{
+    font-family:'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--gold-deep);
+    margin: 14px 0 4px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(184,134,11,0.25);
+  }
+  .overview-month-header:first-child{
+    margin-top: 0;
+  }
+
   .inline-fields{
     display:flex;
     gap: 10px;
@@ -215,8 +296,19 @@
 <!-- מסך הניהול עצמו, מוצג רק אחרי כניסה מוצלחת -->
 <div id="app-screen">
 
-  <!-- ניהול שעות פנויות -->
+  <!-- מבט-על על הימים הקרובים - רואים בבת אחת אילו שעות פתוחות בכל יום -->
   <div class="card">
+    <h2>מבט קדימה - חצי שנה</h2>
+    <label class="overview-filter">
+      <input type="checkbox" id="overview-filter-checkbox" onchange="renderOverview(lastScheduleData)">
+      הצג רק ימים עם שעות פתוחות
+    </label>
+    <div id="overview-list" class="row-list"></div>
+    <div id="overview-loading" class="empty-note">טוענת...</div>
+  </div>
+
+  <!-- ניהול שעות פנויות -->
+  <div class="card" id="schedule-card">
     <h2>שעות פנויות</h2>
 
     <div class="field-label">בחרי תאריך</div>
@@ -254,9 +346,10 @@
 
 <script>
   // ✏️ אותה כתובת Web App בדיוק כמו באתר הראשי
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwDwloN76XqpSMcj8lRioRULmHds_gPBmn4qKXi0xMtZot3fdLjzNz5YE1b-ma7GfVE/exec';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxpJ2iV-eHb_5lfre37uoL-OUAmu7RyeYprGJApYLmVZsukBzdt-rdJeuiV6J_O3OYV/exec';
 
   let adminPassword = '';
+  let lastScheduleData = {};
   let currentWindows = [];
   let currentTreatments = [];
 
@@ -297,6 +390,7 @@
       currentWindows = data.windows || [];
       renderWindows();
       loadTreatments();
+      loadOverview();
 
     }catch(err){
       statusEl.textContent = 'אירעה שגיאה, נסי שוב';
@@ -375,6 +469,7 @@
         return;
       }
       setScheduleStatus('נשמר בהצלחה ✓');
+      loadOverview();
     }catch(err){
       setScheduleStatus('שגיאה בשמירה', true);
     }
@@ -384,6 +479,104 @@
     const el = document.getElementById('schedule-status');
     el.textContent = msg;
     el.className = 'status-msg ' + (isError ? 'err' : 'ok');
+  }
+
+  // ---------------- מבט קדימה (סקירת חצי שנה) ----------------
+
+  async function loadOverview(){
+    const loadingEl = document.getElementById('overview-loading');
+    loadingEl.hidden = false;
+    loadingEl.textContent = 'טוענת...';
+
+    try{
+      const res = await fetch(`${APPS_SCRIPT_URL}?action=adminGetScheduleRange&startDate=${todayStr()}&days=182&password=${encodeURIComponent(adminPassword)}`);
+      const data = await res.json();
+
+      if(!data.success){
+        loadingEl.textContent = data.error || 'שגיאה בטעינת הסקירה';
+        return;
+      }
+
+      loadingEl.hidden = true;
+      lastScheduleData = data.schedule;
+      renderOverview(lastScheduleData);
+
+    }catch(err){
+      loadingEl.textContent = 'שגיאה בטעינת הסקירה';
+    }
+  }
+
+  function todayStr(){
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  function renderOverview(schedule){
+    if(!schedule) return;
+    const list = document.getElementById('overview-list');
+    list.innerHTML = '';
+
+    const onlyOpen = document.getElementById('overview-filter-checkbox').checked;
+    const todayKey = todayStr();
+    const dates = Object.keys(schedule).sort();
+    let lastMonthKey = null;
+
+    dates.forEach(dateKey => {
+      const windows = schedule[dateKey];
+      const hasWindows = windows && windows.length > 0;
+
+      if(onlyOpen && !hasWindows) return; // מסננת ימים ריקים אם הצ'קבוקס מסומן
+
+      const dateObj = new Date(dateKey + 'T12:00:00'); // צהריים כדי להימנע מבעיות גבול יום
+      const isToday = dateKey === todayKey;
+
+      // כותרת חודש חדשה - עוזרת להתמצא לאורך טווח של חצי שנה
+      const monthKey = dateObj.getFullYear() + '-' + dateObj.getMonth();
+      if(monthKey !== lastMonthKey){
+        lastMonthKey = monthKey;
+        const monthHeader = document.createElement('div');
+        monthHeader.className = 'overview-month-header';
+        monthHeader.textContent = dateObj.toLocaleDateString('he-IL', { month:'long', year:'numeric' });
+        list.appendChild(monthHeader);
+      }
+
+      const label = dateObj.toLocaleDateString('he-IL', { weekday:'long', day:'numeric' });
+
+      const row = document.createElement('div');
+      row.className = 'overview-row' + (isToday ? ' is-today' : '');
+      row.onclick = () => {
+        scheduleDate.value = dateKey;
+        loadSchedule();
+        document.getElementById('schedule-card').scrollIntoView({ behavior:'smooth', block:'start' });
+      };
+
+      const labelEl = document.createElement('div');
+      labelEl.className = 'overview-day-label';
+      labelEl.innerHTML = (isToday ? '<span class="today-tag">היום ·</span>' : '') + label;
+      row.appendChild(labelEl);
+
+      if(!hasWindows){
+        const noneEl = document.createElement('div');
+        noneEl.className = 'overview-none';
+        noneEl.textContent = 'אין שעות פתוחות';
+        row.appendChild(noneEl);
+      }else{
+        const chipsEl = document.createElement('div');
+        chipsEl.className = 'overview-chips';
+        windows.forEach(w => {
+          const chip = document.createElement('span');
+          chip.className = 'overview-chip';
+          chip.textContent = `${w.start}-${w.end}`;
+          chipsEl.appendChild(chip);
+        });
+        row.appendChild(chipsEl);
+      }
+
+      list.appendChild(row);
+    });
   }
 
   // ---------------- טיפולים ----------------
