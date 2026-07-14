@@ -510,6 +510,7 @@
 
       lastMonthData = data.days;
       renderCalendar();
+      document.getElementById('calendar-loading').hidden = true; // ✏️ תיקון: זו הייתה הבעיה - "טוענת..." נשאר תקוע כי אף אחד לא הסתיר אותו אחרי הכניסה
       loadTreatments();
 
     }catch(err){
