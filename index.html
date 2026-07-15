@@ -1,4 +1,4 @@
-<!-- עודכן לאחרונה: 15.7.2026, 15:15 -->
+<!-- עודכן לאחרונה: 15.7.2026, ~15:25 -->
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -291,13 +291,13 @@
 
   .hero-cta-wrap{
     position: absolute;
-    bottom: 18%; /* ✏️ הועלה טיפה כדי לא להיבלע עם "גללי למטה" */
+    bottom: 8%; /* ✏️ המרחק מהתחתית של כל הבלוק (כפתורים + טקסט גלילה יחד) */
     right: 0;
     left: 0;
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap: 10px;
+    gap: 14px;
     z-index: 1;
   }
 
@@ -351,9 +351,7 @@
   }
 
   .hero-scroll-hint{
-    position:absolute;
-    /* ✏️ המרחק מהתחתית - מספר גדול יותר = מרים את הטקסט יותר גבוה */
-    bottom: 55px;
+    margin-top: 6px;
     font-weight: 700;
     background: var(--gold-gradient);
     background-size: 200% auto;
@@ -1041,9 +1039,10 @@
 
     <!-- ✏️ כפתור חלול (מסגרת בלבד) ליצירת קשר - קופץ לתחתית הדף -->
     <button class="hero-contact-btn" onclick="scrollToSection('contact')">יצירת קשר</button>
-  </div>
 
-  <div class="hero-scroll-hint">גללי למטה ↓</div>
+    <!-- ✏️ הועבר לתוך אותו בלוק - כדי שהמרחק מהכפתורים יישאר קבוע בכל גודל מסך (כולל טאבלטים) -->
+    <div class="hero-scroll-hint">גללי למטה ↓</div>
+  </div>
 </section>
 
 <!-- ========================================================= -->
