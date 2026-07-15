@@ -1,4 +1,4 @@
-<!-- עודכן לאחרונה: 15.7.2026, ~15:25 -->
+<!-- עודכן לאחרונה: 15.7.2026, 17:19 -->
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -319,19 +319,28 @@
     letter-spacing: 0.5px;
   }
 
-  /* ✏️ כפתור ריבועי חלול (רק מסגרת, בלי מילוי) ליצירת קשר - הצבע נשלט אוטומטית ע"י --gold כמו כל שאר האתר */
-  .hero-contact-btn{
+  /* ✏️ שורת שני הכפתורים החלולים - יצירת קשר ומחירון */
+  .hero-secondary-row{
+    display:grid;
+    grid-template-columns: 1fr 1fr; /* ✏️ שני טורים שווים בהגדרה - תמיד אותו רוחב, לא תלוי באורך הטקסט */
+    gap: 10px;
     margin-top: 16px;
+  }
+
+  /* ✏️ כפתור ריבועי חלול (רק מסגרת, בלי מילוי) ליצירת קשר / מחירון - הצבע נשלט אוטומטית ע"י --gold כמו כל שאר האתר */
+  .hero-contact-btn{
+    min-width: 0; /* ✏️ מונע מהטקסט "לשבור" את השוויון בין הטורים */
     background: transparent;
     border: 2px solid var(--gold);
     color: var(--gold);
     font-family: 'Assistant', sans-serif;
     font-weight: 700;
-    font-size: 15px;
-    padding: 12px 40px;
+    font-size: 14px;
+    padding: 12px 14px;
     border-radius: 10px; /* ✏️ ריבוע עם פינות מעוגלות קלות - לא עיגול מלא כמו כפתור קביעת התור */
     cursor: pointer;
     transition: background 0.3s ease, color 0.3s ease;
+    text-align: center;
   }
   .hero-contact-btn:hover{
     background: var(--gold);
@@ -949,6 +958,69 @@
     border-bottom-color: var(--gold);
   }
 
+  /* ✏️ עיצוב תוכן המחירון - קטגוריות ופריטים */
+  .pricelist-category{
+    margin-bottom: 26px;
+  }
+  .pricelist-category:last-child{
+    margin-bottom: 0;
+  }
+  .pricelist-category-title{
+    font-family:'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 19px;
+    color: var(--gold-deep);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(184,134,11,0.3);
+  }
+  .pricelist-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px dashed rgba(184,134,11,0.2);
+  }
+  .pricelist-item:last-child{
+    border-bottom:none;
+  }
+  .pricelist-item-name{
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text-dark);
+  }
+  .pricelist-item-price{
+    font-family:'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--gold-deep);
+    white-space:nowrap;
+  }
+
+  /* ✏️ כפתור פרסום למפתח האתר - זהב מלא, ממורכז, מעל הפוטר */
+  .dev-cta-wrap{
+    text-align:center;
+    padding: 20px 20px 10px;
+  }
+  .dev-cta-btn{
+    display:inline-block;
+    background: var(--gold);
+    color: #000;
+    text-decoration:none;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 14px 32px;
+    border-radius: 50px;
+    box-shadow: 0 0 20px rgba(212,175,55,0.3);
+    transition: all 0.3s ease;
+  }
+  .dev-cta-btn:hover{
+    background: var(--gold-light);
+    box-shadow: 0 0 32px rgba(212,175,55,0.5);
+    transform: translateY(-2px);
+  }
+
   /* =========================================================
      פוטר
   ========================================================= */
@@ -1039,8 +1111,11 @@
     <button class="whatsapp-btn hero-cta-btn" onclick="openBookingModal()">קביעת תורים</button>
     <div class="hero-cta-caption">לקביעת / ביטול תורים מהירה אוטומטית לחצי כאן</div>
 
-    <!-- ✏️ כפתור חלול (מסגרת בלבד) ליצירת קשר - קופץ לתחתית הדף -->
-    <button class="hero-contact-btn" onclick="scrollToSection('contact')">יצירת קשר</button>
+    <!-- ✏️ שורת כפתורים חלולים - יצירת קשר ומחירון, זה לצד זה -->
+    <div class="hero-secondary-row">
+      <button class="hero-contact-btn" onclick="scrollToSection('contact')">יצירת קשר</button>
+      <button class="hero-contact-btn" onclick="openPriceListModal()">מחירון</button>
+    </div>
   </div>
 
   <div class="hero-scroll-hint">גללי למטה ↓</div>
@@ -1156,6 +1231,20 @@
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- ========================================================= -->
+<!-- חלונית מחירון - נטענת מהשרת, מחולקת לקטגוריות -->
+<!-- ========================================================= -->
+<div id="pricelist-modal-overlay" class="booking-modal-overlay" onclick="if(event.target===this) closePriceListModal()">
+  <div class="booking-modal-card">
+    <button class="booking-modal-close" onclick="closePriceListModal()">✕</button>
+    <h2 class="section-title gold-metal" style="margin-bottom:22px;">מחירון</h2>
+
+    <div id="pricelist-loading" class="slots-loading">טוען מחירון...</div>
+    <div id="pricelist-empty" class="slots-empty" hidden>המחירון עדיין ריק</div>
+    <div id="pricelist-content"></div>
   </div>
 </div>
 
@@ -1311,6 +1400,16 @@
 </section>
 
 <!-- ========================================================= -->
+<!-- כפתור פרסום למפתח האתר -->
+<!-- ========================================================= -->
+<div class="dev-cta-wrap">
+  <!-- ✏️ קישור וואטסאפ - שני את המספר בקישור אם צריך (972 + מספר בלי 0 מוביל) -->
+  <a href="https://wa.me/972552778348?text=%D7%94%D7%99%D7%99%2C%20%D7%A8%D7%90%D7%99%D7%AA%D7%99%20%D7%90%D7%AA%20%D7%94%D7%90%D7%AA%D7%A8%20%D7%A9%D7%9C%20%D7%9E%D7%A8%D7%99%D7%9D%20%D7%95%D7%90%D7%A0%D7%99%20%D7%92%D7%9D%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%90%D7%AA%D7%A8%20%D7%9B%D7%96%D7%94" target="_blank" class="dev-cta-btn">
+    רוצים גם אתר כזה? לחצו כאן
+  </a>
+</div>
+
+<!-- ========================================================= -->
 <!-- פוטר -->
 <!-- ========================================================= -->
 <footer>
@@ -1372,6 +1471,72 @@
     document.getElementById('tab-panel-cancel').hidden = isBooking;
     document.getElementById('tab-btn-booking').classList.toggle('active', isBooking);
     document.getElementById('tab-btn-cancel').classList.toggle('active', !isBooking);
+  }
+
+  /* =========================================================
+     מחירון
+  ========================================================= */
+  let priceListLoaded = false;
+
+  function openPriceListModal(){
+    document.getElementById('pricelist-modal-overlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+    if(!priceListLoaded) loadPriceList(); // טוענים מהשרת רק פעם אחת, לא בכל פתיחה
+  }
+  function closePriceListModal(){
+    document.getElementById('pricelist-modal-overlay').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  async function loadPriceList(){
+    const loadingEl = document.getElementById('pricelist-loading');
+    const emptyEl = document.getElementById('pricelist-empty');
+    const contentEl = document.getElementById('pricelist-content');
+
+    try{
+      const res = await fetch(`${APPS_SCRIPT_URL}?action=getPriceList`);
+      const data = await res.json();
+      loadingEl.hidden = true;
+
+      if(!data.success || !data.categories || data.categories.length === 0){
+        emptyEl.hidden = false;
+        return;
+      }
+
+      priceListLoaded = true;
+      contentEl.innerHTML = '';
+
+      data.categories.forEach(cat => {
+        const catDiv = document.createElement('div');
+        catDiv.className = 'pricelist-category';
+
+        const title = document.createElement('div');
+        title.className = 'pricelist-category-title';
+        title.textContent = cat.category;
+        catDiv.appendChild(title);
+
+        (cat.items || []).forEach(item => {
+          const row = document.createElement('div');
+          row.className = 'pricelist-item';
+          row.innerHTML = `
+            <span class="pricelist-item-name">${escapeHtml(item.name)}</span>
+            <span class="pricelist-item-price">₪${escapeHtml(String(item.price))}</span>
+          `;
+          catDiv.appendChild(row);
+        });
+
+        contentEl.appendChild(catDiv);
+      });
+
+    }catch(err){
+      loadingEl.textContent = 'אירעה שגיאה בטעינת המחירון';
+    }
+  }
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
   }
 
   // מחפשת את התורים העתידיים של הלקוחה לפי מספר הטלפון שהזינה
