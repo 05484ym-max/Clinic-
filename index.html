@@ -1,4 +1,4 @@
-<!-- עודכן לאחרונה: 15.7.2026, 22:13 -->
+<!-- עודכן לאחרונה: 15.7.2026, ~22:20 -->
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -81,12 +81,35 @@
     z-index: 1000;
     display:flex;
     align-items:center;
+    justify-content:space-between;
     /* ✏️ שליטה על צד ההמבורגר: flex-start = ימין | flex-end = שמאל (הפוך מהרגיל כי הדף בעברית/RTL) */
-    justify-content:flex-start;
-    padding: 22px 6%;
+    padding: 18px 6%;
     background: rgba(251,246,234,0.88);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid rgba(212,175,55,0.25);
+  }
+
+  /* ✏️ תפריט אופקי למחשב - מוסתר לגמרי במובייל, מוצג רק דרך המדיה-קוורי של הדסקטופ למטה */
+  .desktop-nav{
+    display:none;
+  }
+  .desktop-nav a{
+    background: transparent;
+    border: 1.5px solid var(--gold);
+    color: var(--gold-deep);
+    text-decoration:none;
+    font-family:'Assistant', sans-serif;
+    font-weight: 700;
+    font-size: 13.5px;
+    padding: 9px 16px;
+    border-radius: 10px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+  .desktop-nav a:hover{
+    background: var(--gold);
+    color: #000;
   }
 
   /* --- כפתור המבורגר (שלושה פסים) - ממוקם בצד ימין למעלה --- */
@@ -1072,13 +1095,16 @@
      כך שהמובייל נשאר בדיוק כמו שעיצבנו ולא נוגעים בו כלל.
   ========================================================= */
   @media (min-width: 901px){
-    /* התפריט הנפתח - קבוע ברוחב נעים במקום שליש מהמסך (שהיה עצום במחשב) */
-    .nav-menu{
-      width: 400px;
-      right: -400px;
+    /* ✏️ מציגים את התפריט האופקי (מוסתר כברירת מחדל, ראה למעלה) */
+    .desktop-nav{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
     }
-    .nav-menu.open{
-      right: 0;
+
+    /* ✏️ במחשב מסתירים את כפתור ההמבורגר וגם את הפאנל הנגלל - יש במקומם תפריט אופקי (למעלה) */
+    .hamburger{
+      display:none;
     }
 
     /* גובה ה-Hero: ה-padding העליון (18vh) הופך לענק במסכים גבוהים - נותנים לו תקרה */
@@ -1086,7 +1112,10 @@
       padding-top: clamp(60px, 12vh, 140px);
     }
 
-    /* ✏️ הלוגו במכוון *לא* מוגדל כאן - הוא כבר משתמש באותו clamp() שיש במובייל, שממילא "נתקר" ב-120px גם במסך רחב */
+    /* ✏️ הלוגו - קטן טיפה יותר מהתקרה של המובייל (120px), כך שבמסך הרחב הוא לא מרגיש כבד/לא-פרופורציונלי */
+    .hero-logo{
+      font-size: clamp(70px, 6vw, 96px);
+    }
     .hero-subtitle{
       font-size: 20px;
       max-width: 600px;
@@ -1099,6 +1128,15 @@
     .hero-cta-wrap{
       position: static;
       margin-top: 36px;
+    }
+
+    /* ✏️ "גללי למטה" היה ממוקם לפי מרחק קבוע מהתחתית (bottom:55px) - וזה גרם לו
+       "לשבת" בדיוק על הכפתורים כשתוכן ה-Hero זורם באופן טבעי (השינוי למעלה).
+       הפתרון: גם הוא זורם עכשיו בטבעיות, אחרי הכפתורים - אף פעם לא יחפוף. */
+    .hero-scroll-hint{
+      position: static;
+      display:block;
+      margin-top: 26px;
     }
 
     /* הכפתורים בעמוד הבית - גודל קבוע ונעים במקום יחסי ל-vw (שהיה מיועד למובייל) */
@@ -1134,12 +1172,22 @@
 <!-- תפריט עליון -->
 <!-- ========================================================= -->
 <header>
-  <!-- כפתור ההמבורגר בלבד בשורה העליונה, בצד ימין -->
+  <!-- כפתור ההמבורגר - מוצג רק במובייל (נעלם במחשב דרך המדיה-קוורי) -->
   <div class="hamburger" id="hamburger" onclick="toggleMenu()">
     <span></span>
     <span></span>
     <span></span>
   </div>
+
+  <!-- ✏️ תפריט אופקי - מוצג רק במחשב (min-width:901px), מוסתר לגמרי במובייל -->
+  <nav class="desktop-nav">
+    <a onclick="openBookingModal()">קביעת תורים</a>
+    <a onclick="openCancelModal()">ביטול תורים</a>
+    <a onclick="scrollToSection('about')">אודות</a>
+    <a onclick="scrollToSection('gallery')">דוגמאות</a>
+    <a onclick="openPriceListModal()">מחירון</a>
+    <a onclick="scrollToSection('contact')">יצירת קשר</a>
+  </nav>
 </header>
 
 <!-- שכבת רקע כהה שמופיעה כשהתפריט פתוח -->
