@@ -463,7 +463,7 @@
 
 <script>
   // ✏️ אותה כתובת Web App בדיוק כמו באתר הראשי
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBUL8vAC-OX3ILsPJZHeoiaF15cDPQa2lOLuhGFgNbF_R0N_3HVBHGc5e2zSW1QdGk/exec';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyoo4TWM2GnbWRU2efQzbhMTjXvGOo7-ag6wvFz1R0-UGxTNXgXLVXL9TTnqWav9E_L/exec';
 
   let adminPassword = '';
   let currentWindows = [];
@@ -625,6 +625,12 @@
         <div class="booking-name">${escapeHtml(b.name)}${b.treatment ? ' · ' + escapeHtml(b.treatment) : ''}</div>
         ${b.phone ? `<div class="booking-meta">${escapeHtml(b.phone)}</div>` : ''}
       `;
+      const cancelBtn = document.createElement('button');
+      cancelBtn.className = 'btn btn-danger';
+      cancelBtn.textContent = 'ביטול תור';
+      cancelBtn.style.marginTop = '8px';
+      cancelBtn.onclick = () => cancelBooking(dateKey, b.id, b.name);
+      row.appendChild(cancelBtn);
       bookingsList.appendChild(row);
     });
 
@@ -638,6 +644,40 @@
 
   function closeDayModal(){
     document.getElementById('day-modal-overlay').classList.remove('show');
+  }
+
+  // מבטלת תור: מבקשת אישור, שולחת בקשת ביטול לשרת, ואז מרעננת את התצוגה
+  async function cancelBooking(dateKey, eventId, clientName){
+    if(!confirm(`לבטל את התור של ${clientName}?`)) return;
+
+    try{
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'adminCancelBooking',
+          password: adminPassword,
+          date: dateKey,
+          eventId: eventId
+        })
+      });
+      const data = await res.json();
+
+      if(!data.success){
+        alert(data.error || 'שגיאה בביטול התור');
+        return;
+      }
+
+      // מעדכנים את הנתונים המקומיים כדי שהשינוי יראה מיד, בלי לפנות שוב לשרת
+      if(lastMonthData[dateKey]){
+        lastMonthData[dateKey].bookings = lastMonthData[dateKey].bookings.filter(b => b.id !== eventId);
+      }
+      renderCalendar();
+      openDayModal(dateKey); // מרעננת את החלונית עצמה עם הרשימה המעודכנת
+
+    }catch(err){
+      alert('שגיאה בביטול התור, נסי שוב');
+    }
   }
 
   function escapeHtml(str){
