@@ -1,4 +1,4 @@
-<!-- עודכן לאחרונה: 16.7.2026, 11:32 -->
+<!-- עודכן לאחרונה: 16.7.2026, 11:38 -->
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -84,9 +84,11 @@
     justify-content:space-between;
     /* ✏️ שליטה על צד ההמבורגר: flex-start = ימין | flex-end = שמאל (הפוך מהרגיל כי הדף בעברית/RTL) */
     padding: 18px 6%;
-    background: rgba(251,246,234,0.88);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(212,175,55,0.25);
+    background: transparent; /* ✏️ שקוף לגמרי - בלי "פס" מעל שאר הדף */
+    pointer-events: none; /* ✏️ כך שאפשר "לגעת" דרך השטח השקוף; רק לכפתורים בפנים יש pointer-events חזרה */
+  }
+  header > *{
+    pointer-events: auto;
   }
 
   /* ✏️ תפריט אופקי למחשב - מוסתר לגמרי במובייל, מוצג רק דרך המדיה-קוורי של הדסקטופ למטה */
@@ -122,6 +124,10 @@
     cursor:pointer;
     width: 40px;
     height: 40px;
+    border-radius: 50%;
+    background: rgba(251,246,234,0.85);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     z-index: 1100;
   }
   .hamburger span{
@@ -257,7 +263,7 @@
     align-items:center;
     justify-content:flex-start;
     text-align:center;
-    padding: 18vh 20px 0;
+    padding: 11vh 20px 0;
     background:
       radial-gradient(ellipse at center, rgba(212,175,55,0.12) 0%, rgba(0,0,0,0) 60%),
       var(--black);
@@ -1194,7 +1200,7 @@
 
     /* גובה ה-Hero: ה-padding העליון (18vh) הופך לענק במסכים גבוהים - נותנים לו תקרה */
     .hero{
-      padding-top: clamp(60px, 12vh, 140px);
+      padding-top: clamp(40px, 7vh, 100px);
     }
 
     /* ✏️ הלוגו - קטן טיפה יותר מהתקרה של המובייל (120px), כך שבמסך הרחב הוא לא מרגיש כבד/לא-פרופורציונלי */
