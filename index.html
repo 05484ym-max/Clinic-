@@ -1,4 +1,4 @@
-<!-- עודכן לאחרונה: 16.7.2026, 10:00 -->
+<!-- עודכן לאחרונה: 16.7.2026, ~10:15 -->
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -1878,6 +1878,10 @@
   let clientCalMonth = clientCalMinMonth;
   let clientCalAvailability = {};
 
+  // ✏️ קאש בצד הדפדפן: שומר תוצאות זמינות שכבר הבאנו, כדי לא לבקש שוב מהשרת
+  const availabilityCache = {};
+  function availCacheKey(year, month, treatment){ return `${year}-${month}-${treatment}`; }
+
   // טוענת את רשימת הטיפולים מהשרת ומציגה אותה בתפריט הנפתח
   async function loadTreatments(){
     try{
@@ -1898,12 +1902,38 @@
         treatmentSelect.appendChild(opt);
       });
 
+      // ✏️ מריצים ברקע, מבלי לחכות (לא await) - טוענים מראש את זמינות החודש הנוכחי
+      // לכל טיפול, כדי שברגע שהלקוחה בוחרת טיפול, הלוח כבר יהיה מוכן ומיידי
+      prefetchAllTreatmentsAvailability(data.treatments);
+
     }catch(err){
       treatmentSelect.innerHTML = '<option value="">שגיאה בטעינת הטיפולים</option>';
     }
   }
   loadTreatments();
   loadPriceList(); // ✏️ טוענים ברקע כבר עם טעינת הדף, כדי שפתיחת חלונית המחירון תהיה מיידית
+
+  // טוענת ברקע, לכל טיפול בנפרד, את זמינות החודש הנוכחי - ושומרת בקאש המקומי
+  async function prefetchAllTreatmentsAvailability(treatments){
+    treatments.forEach(async (t) => {
+      const key = availCacheKey(clientCalMinYear, clientCalMinMonth, t.name);
+      if(availabilityCache[key]) return; // כבר בקאש
+      try{
+        const url = `${APPS_SCRIPT_URL}?action=getMonthAvailability&year=${clientCalMinYear}&month=${clientCalMinMonth}&treatment=${encodeURIComponent(t.name)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if(data.success){
+          availabilityCache[key] = data.days || {};
+          // אם הלקוחה כבר במקרה בחרה בדיוק את הטיפול הזה בינתיים - נעדכן את התצוגה מיד
+          if(selectedTreatment === t.name && clientCalYear === clientCalMinYear && clientCalMonth === clientCalMinMonth){
+            clientCalAvailability = availabilityCache[key];
+            renderClientCalendar();
+            document.getElementById('client-cal-loading').hidden = true;
+          }
+        }
+      }catch(err){ /* שגיאת טעינה מוקדמת - לא קריטית, פשוט תיטען שוב כרגיל בלחיצה */ }
+    });
+  }
 
   treatmentSelect.addEventListener('change', () => {
     hideError();
@@ -1943,6 +1973,16 @@
   async function loadClientCalendarMonth(){
     const loadingEl = document.getElementById('client-cal-loading');
     const gridEl = document.getElementById('client-cal-grid');
+
+    // ✏️ אם כבר יש בקאש המקומי (בזכות הטעינה המוקדמת ברקע) - מציגים מיידית, בלי לבקש מהשרת
+    const key = availCacheKey(clientCalYear, clientCalMonth, selectedTreatment);
+    if(availabilityCache[key]){
+      loadingEl.hidden = true;
+      clientCalAvailability = availabilityCache[key];
+      renderClientCalendar();
+      return;
+    }
+
     loadingEl.hidden = false;
     gridEl.innerHTML = '';
 
@@ -1958,6 +1998,7 @@
       }
 
       clientCalAvailability = data.days || {};
+      availabilityCache[key] = clientCalAvailability;
       renderClientCalendar();
 
     }catch(err){
