@@ -1,4 +1,4 @@
-<!-- עודכן לאחרונה: 15.7.2026, ~22:20 -->
+<!-- עודכן לאחרונה: 15.7.2026, ~22:45 -->
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -768,6 +768,91 @@
     75%{ content:'...'; }
   }
 
+  /* ✏️ לוח שנה תלת-חודשי לבחירת תאריך זמין (בעמוד הלקוחה) */
+  .client-cal-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom: 12px;
+  }
+  .client-cal-nav-btn{
+    background:none;
+    border: 1.5px solid var(--gold);
+    color: var(--gold-deep);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 17px;
+    line-height:1;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition: background 0.25s ease, opacity 0.25s ease;
+  }
+  .client-cal-nav-btn:hover{
+    background: rgba(184,134,11,0.12);
+  }
+  .client-cal-nav-btn:disabled{
+    opacity: 0.3;
+    cursor:not-allowed;
+  }
+  .client-cal-month-label{
+    font-family:'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text-dark);
+  }
+  .client-cal-weekdays{
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align:center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-dark-soft);
+    margin-bottom: 6px;
+  }
+  .client-cal-grid{
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+  }
+  .client-cal-cell{
+    aspect-ratio: 1 / 1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family:'Assistant', sans-serif;
+  }
+  .client-cal-cell.empty{
+    visibility:hidden;
+  }
+  .client-cal-cell.unavailable{
+    color: var(--text-dark-soft);
+    opacity: 0.35;
+  }
+  .client-cal-cell.available{
+    background: rgba(184,134,11,0.1);
+    border: 1.5px solid var(--gold);
+    color: var(--gold-deep);
+    cursor:pointer;
+    transition: background 0.25s ease, transform 0.15s ease;
+  }
+  .client-cal-cell.available:hover{
+    background: rgba(184,134,11,0.22);
+    transform: translateY(-2px);
+  }
+  .client-cal-cell.selected{
+    background: var(--gold-gradient);
+    background-size: 200% auto;
+    color:#000;
+    border-color: var(--gold);
+    box-shadow: 0 0 14px rgba(184,134,11,0.4);
+  }
+
   .booking-summary{
     background: rgba(184,134,11,0.08);
     border: 1px solid rgba(184,134,11,0.25);
@@ -1262,7 +1347,16 @@
         <!-- שלב 2: בחירת תאריך - מוצג רק אחרי שנבחר טיפול -->
         <div class="booking-step" id="step-date" hidden>
           <div class="booking-label">בחרי תאריך</div>
-          <input type="date" id="apt-date" class="booking-date-input">
+          <div class="client-cal-nav">
+            <button type="button" id="client-cal-prev" class="client-cal-nav-btn" onclick="changeClientCalMonth(-1)">‹</button>
+            <div id="client-cal-month-label" class="client-cal-month-label"></div>
+            <button type="button" id="client-cal-next" class="client-cal-nav-btn" onclick="changeClientCalMonth(1)">›</button>
+          </div>
+          <div class="client-cal-weekdays">
+            <span>א</span><span>ב</span><span>ג</span><span>ד</span><span>ה</span><span>ו</span><span>ש</span>
+          </div>
+          <div id="client-cal-grid" class="client-cal-grid"></div>
+          <div id="client-cal-loading" class="slots-loading" hidden>טוענת זמינות...</div>
         </div>
 
         <!-- שלב 3: בחירת שעה - מוצג רק אחרי שנבחר תאריך -->
@@ -1751,7 +1845,6 @@
 
   const treatmentSelect = document.getElementById('apt-treatment');
   const stepDate = document.getElementById('step-date');
-  const dateInput = document.getElementById('apt-date');
   const stepSlots = document.getElementById('step-slots');
   const slotsContainer = document.getElementById('slots-container');
   const slotsLoading = document.getElementById('slots-loading');
@@ -1773,14 +1866,17 @@
   let selectedDate = null;
   let selectedTime = null;
 
-  // חוסם תאריכי עבר בבורר התאריך (מגביל ל"היום" ואילך)
-  (function blockPastDates(){
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const dd = String(today.getDate()).padStart(2, '0');
-    dateInput.min = `${yyyy}-${mm}-${dd}`;
-  })();
+  // ✏️ גבולות לוח השנה - מהיום ועד 3 חודשים קדימה (כולל)
+  const todayForCal = new Date();
+  const clientCalMinYear = todayForCal.getFullYear();
+  const clientCalMinMonth = todayForCal.getMonth() + 1;
+  const maxDateForCal = new Date(todayForCal.getFullYear(), todayForCal.getMonth() + 2, 1);
+  const clientCalMaxYear = maxDateForCal.getFullYear();
+  const clientCalMaxMonth = maxDateForCal.getMonth() + 1;
+
+  let clientCalYear = clientCalMinYear;
+  let clientCalMonth = clientCalMinMonth;
+  let clientCalAvailability = {};
 
   // טוענת את רשימת הטיפולים מהשרת ומציגה אותה בתפריט הנפתח
   async function loadTreatments(){
@@ -1814,6 +1910,7 @@
     stepForm.hidden = true;
     stepSuccess.hidden = true;
     selectedTime = null;
+    selectedDate = null;
 
     if(!treatmentSelect.value){
       selectedTreatment = null;
@@ -1823,26 +1920,102 @@
     selectedTreatment = treatmentSelect.value;
     stepDate.hidden = false;
 
-    // אם כבר נבחר תאריך קודם לכן, טוענים שוב שעות פנויות לפי הטיפול החדש
-    if(dateInput.value){
-      selectedDate = dateInput.value;
-      loadSlots(selectedDate, selectedTreatment);
-    }
+    // כל טיפול חדש = מתחילים את לוח השנה מהחודש הנוכחי מחדש, כי הזמינות תלויה במשך הטיפול
+    clientCalYear = clientCalMinYear;
+    clientCalMonth = clientCalMinMonth;
+    loadClientCalendarMonth();
   });
 
-  dateInput.addEventListener('change', () => {
+  function changeClientCalMonth(delta){
+    let y = clientCalYear, m = clientCalMonth + delta;
+    if(m < 1){ m = 12; y--; }
+    if(m > 12){ m = 1; y++; }
+    // לא מרשים לצאת מהטווח המותר (היום עד 3 חודשים קדימה)
+    if(y < clientCalMinYear || (y === clientCalMinYear && m < clientCalMinMonth)) return;
+    if(y > clientCalMaxYear || (y === clientCalMaxYear && m > clientCalMaxMonth)) return;
+    clientCalYear = y;
+    clientCalMonth = m;
+    loadClientCalendarMonth();
+  }
+
+  // טוענת מהשרת אילו ימים בחודש המוצג יש בהם זמינות עבור הטיפול הנבחר
+  async function loadClientCalendarMonth(){
+    const loadingEl = document.getElementById('client-cal-loading');
+    const gridEl = document.getElementById('client-cal-grid');
+    loadingEl.hidden = false;
+    gridEl.innerHTML = '';
+
+    try{
+      const url = `${APPS_SCRIPT_URL}?action=getMonthAvailability&year=${clientCalYear}&month=${clientCalMonth}&treatment=${encodeURIComponent(selectedTreatment)}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      loadingEl.hidden = true;
+
+      if(!data.success){
+        showError(data.error || 'אירעה שגיאה בטעינת הזמינות');
+        return;
+      }
+
+      clientCalAvailability = data.days || {};
+      renderClientCalendar();
+
+    }catch(err){
+      loadingEl.hidden = true;
+      showError('אירעה שגיאה, אנא נסי שוב');
+    }
+  }
+
+  function renderClientCalendar(){
+    const label = document.getElementById('client-cal-month-label');
+    label.textContent = new Date(clientCalYear, clientCalMonth - 1, 1).toLocaleDateString('he-IL', { month:'long', year:'numeric' });
+
+    document.getElementById('client-cal-prev').disabled =
+      (clientCalYear === clientCalMinYear && clientCalMonth === clientCalMinMonth);
+    document.getElementById('client-cal-next').disabled =
+      (clientCalYear === clientCalMaxYear && clientCalMonth === clientCalMaxMonth);
+
+    const grid = document.getElementById('client-cal-grid');
+    grid.innerHTML = '';
+
+    const firstWeekday = new Date(clientCalYear, clientCalMonth - 1, 1).getDay();
+    const daysInMonth = new Date(clientCalYear, clientCalMonth, 0).getDate();
+    const pad2 = n => (n < 10 ? '0' : '') + n;
+
+    for(let i = 0; i < firstWeekday; i++){
+      const empty = document.createElement('div');
+      empty.className = 'client-cal-cell empty';
+      grid.appendChild(empty);
+    }
+
+    for(let day = 1; day <= daysInMonth; day++){
+      const dateKey = `${clientCalYear}-${pad2(clientCalMonth)}-${pad2(day)}`;
+      const isAvailable = !!clientCalAvailability[dateKey];
+
+      const cell = document.createElement('div');
+      cell.className = 'client-cal-cell ' + (isAvailable ? 'available' : 'unavailable');
+      if(dateKey === selectedDate) cell.classList.add('selected');
+      cell.textContent = day;
+
+      if(isAvailable){
+        cell.onclick = () => selectClientDate(dateKey, cell);
+      }
+
+      grid.appendChild(cell);
+    }
+  }
+
+  function selectClientDate(dateKey, cellEl){
+    selectedDate = dateKey;
+    document.querySelectorAll('.client-cal-cell').forEach(c => c.classList.remove('selected'));
+    cellEl.classList.add('selected');
+
     hideError();
     stepForm.hidden = true;
     stepSuccess.hidden = true;
     selectedTime = null;
 
-    if(!dateInput.value || !selectedTreatment){
-      stepSlots.hidden = true;
-      return;
-    }
-    selectedDate = dateInput.value;
     loadSlots(selectedDate, selectedTreatment);
-  });
+  }
 
   // טוענת שעות פנויות מה-Apps Script עבור תאריך + טיפול נבחרים
   async function loadSlots(dateStr, treatmentName){
