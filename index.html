@@ -1,4 +1,4 @@
-<!-- עודכן לאחרונה: 17.7.2026, 18:21 -->
+<!-- עודכן לאחרונה: 17.7.2026, 18:27 -->
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -124,10 +124,6 @@
     cursor:pointer;
     width: 40px;
     height: 40px;
-    border-radius: 50%;
-    background: rgba(251,246,234,0.45); /* ✏️ אותו גוון קרם של הדף, שקוף יותר - מספר קטן יותר = שקוף יותר */
-    backdrop-filter: blur(6px);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     z-index: 1100;
   }
   .hamburger span{
@@ -313,8 +309,8 @@
 
   /* ✏️ כותרת המשנה בעמוד הפתיחה - שנה כאן את המשפט שמופיע מתחת ללוגו */
   .hero-subtitle{
-    font-weight: 600;
-    color: var(--text-dark);
+    font-weight: 800; /* ✏️ הודגש יותר (היה 600) */
+    color: var(--gold-deep); /* ✏️ צבע כהה וחזק יותר, כדי שיראו אותו ברור יותר */
     letter-spacing: 2px;
   }
 
