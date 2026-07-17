@@ -1,4 +1,4 @@
-<!-- עודכן לאחרונה: 17.7.2026, 17:58 -->
+<!-- עודכן לאחרונה: 17.7.2026, 18:21 -->
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -430,10 +430,12 @@
   }
 
   .section-title{
-    font-family:'Playfair Display', serif;
-    font-size: clamp(32px, 5vw, 48px);
+    font-family:'Rubik', sans-serif; /* ✏️ פונט מעוגל במקום הסריפי המרובע, הצבע (gold-metal) לא השתנה */
+    font-size: clamp(26px, 4vw, 34px);
     text-align:center;
-    font-weight: 800;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 34px; /* ✏️ מרחק מהתוכן שמתחת */
     /* ✏️ צל דק וחד (בלי טשטוש) לתחושת עומק, בלי להיראות מרוח */
     filter: drop-shadow(0 1px 0 rgba(78,51,8,0.4));
   }
@@ -1157,6 +1159,21 @@
     color: #777;
     letter-spacing: 1px;
   }
+  .contact-address-title{
+    font-family:'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: clamp(26px, 4vw, 34px); /* ✏️ זהה בדיוק לגודל של שאר כותרות הסקשנים */
+    letter-spacing: 0.5px;
+    margin-top: 90px;
+    margin-bottom: 30px;
+  }
+  .contact-address{
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: 0.5px;
+    text-align:center;
+  }
   footer span{
     font-weight: 700;
     background: var(--gold-gradient);
@@ -1618,6 +1635,10 @@
     </a>
 
   </div>
+
+  <!-- ✏️ כתובת הקליניקה - מתחת לשורת האייקונים -->
+  <div class="contact-address-title gold-metal">המיקום שלנו</div>
+  <div class="contact-address">רחוב יהדות איטליה 12, נווה שרון, נתיבות</div>
 </section>
 
 <!-- ========================================================= -->
