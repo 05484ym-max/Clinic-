@@ -1,4 +1,4 @@
-<!-- עודכן לאחרונה: 19.7.2026, 07:33 -->
+<!-- עודכן לאחרונה: 19.7.2026, 08:01 -->
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -505,13 +505,12 @@
     margin-bottom: 12px;
   }
 
-  /* ✏️ חלונית גלריה יחידה - גוללים בין התמונות בהחלקה אופקית (כמו "גלגלת") */
+  /* ✏️ חלונית גלריה יחידה - גוללים בין התמונות בהחלקה אופקית */
   .gallery-carousel{
     display:flex;
     overflow-x:auto;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-    border-radius: 18px;
     scrollbar-width: none; /* מסתיר את פס הגלילה - Firefox */
   }
   .gallery-carousel::-webkit-scrollbar{
@@ -522,30 +521,28 @@
     position:relative;
     flex: 0 0 100%;
     scroll-snap-align: center;
+  }
+
+  /* ✏️ עטיפת התמונה בלבד מקבלת את הפינות המעוגלות והמסגרת - בלי שום פס כהה מתחתיה */
+  .gallery-slide-image{
     aspect-ratio: 1 / 1;
     overflow:hidden;
     border: 1px solid rgba(212,175,55,0.25);
     border-radius: 18px;
   }
-
   .gallery-slide img{
     width:100%;
     height:100%;
     object-fit:cover;
     display:block;
-    filter: grayscale(10%) brightness(0.92);
+    filter: grayscale(10%) brightness(0.95);
   }
 
+  /* ✏️ הכיתוב עכשיו מתחת לתמונה עצמה, בטקסט רגיל - לא פס כהה מעל התמונה */
   .gallery-caption{
-    position:absolute;
-    bottom:0;
-    right:0;
-    left:0;
-    padding: 18px 16px;
-    background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+    text-align:center;
+    padding-top: 12px;
   }
-
-  /* ✏️ כיתובי השקופיות בגלריה - שם הטיפול שמופיע מתחת לתמונה */
   .gallery-caption span{
     background: var(--gold-gradient);
     background-size: 200% auto;
@@ -556,6 +553,58 @@
     font-weight:700;
     font-size: 16px;
     letter-spacing:1px;
+  }
+
+  /* ✏️ ה"גלגלת" - כמו גלגל מספרים בכספת/מנעול אופניים: רצועה אופקית שגוללים,
+     עם מחוג קבוע במרכז שמצביע על המספר הנבחר */
+  .gallery-wheel-wrap{
+    position: relative;
+    max-width: 280px;
+    margin: 22px auto 0;
+  }
+  .gallery-wheel-pointer{
+    position:absolute;
+    top: -6px;
+    right: 50%;
+    transform: translateX(50%);
+    color: var(--gold);
+    font-size: 13px;
+    line-height:1;
+    z-index: 2;
+  }
+  .gallery-wheel-track{
+    display:flex;
+    overflow-x:auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    border-top: 2px solid var(--gold);
+    border-bottom: 2px solid var(--gold);
+    padding: 12px 0;
+    scrollbar-width: none;
+  }
+  .gallery-wheel-track::-webkit-scrollbar{
+    display:none;
+  }
+  .gallery-wheel-spacer{
+    flex: 0 0 calc(50% - 20px); /* מאפשר לספרה הראשונה/אחרונה "להגיע" למרכז */
+  }
+  .gallery-wheel-tick{
+    flex: 0 0 40px;
+    scroll-snap-align: center;
+    text-align:center;
+    font-family:'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text-dark-soft);
+    opacity: 0.5;
+    transition: color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+    cursor:pointer;
+    user-select:none;
+  }
+  .gallery-wheel-tick.active{
+    color: var(--gold-deep);
+    opacity: 1;
+    transform: scale(1.35);
   }
 
   /* =========================================================
@@ -1528,11 +1577,11 @@
   <!-- ✏️ רמז לגלילה - אפשר לערוך את הטקסט -->
   <div class="gallery-hint">↔ גללי ימינה / שמאלה</div>
 
-  <div class="gallery-carousel">
+  <div class="gallery-carousel" id="galleryCarousel">
 
     <!-- שקופית 1 - ✏️ שם הקובץ צריך להיות בדיוק work1.jpg, מועלה לאותה תיקייה כמו index.html -->
     <div class="gallery-slide">
-      <img src="work1.jpg" alt="עבודה לדוגמה 1">
+      <div class="gallery-slide-image"><img src="work1.jpg" alt="עבודה לדוגמה 1"></div>
       <div class="gallery-caption">
         <!-- ✏️ כיתוב התמונה - שם הטיפול -->
         <span>לק ג'ל</span>
@@ -1541,84 +1590,84 @@
 
     <!-- שקופית 2 -->
     <div class="gallery-slide">
-      <img src="work2.jpg" alt="עבודה לדוגמה 2">
-      <div class="gallery-caption">
-        <span>גבות</span>
-      </div>
+      <div class="gallery-slide-image"><img src="work2.jpg" alt="עבודה לדוגמה 2"></div>
+      <div class="gallery-caption"><span>גבות</span></div>
     </div>
 
     <!-- שקופית 3 -->
     <div class="gallery-slide">
-      <img src="work3.jpg" alt="עבודה לדוגמה 3">
-      <div class="gallery-caption">
-        <span>פדיקור רפואי</span>
-      </div>
+      <div class="gallery-slide-image"><img src="work3.jpg" alt="עבודה לדוגמה 3"></div>
+      <div class="gallery-caption"><span>פדיקור רפואי</span></div>
     </div>
 
     <!-- שקופית 4 -->
     <div class="gallery-slide">
-      <img src="work4.jpg" alt="עבודה לדוגמה 4">
-      <div class="gallery-caption">
-        <span>לק ג'ל</span>
-      </div>
+      <div class="gallery-slide-image"><img src="work4.jpg" alt="עבודה לדוגמה 4"></div>
+      <div class="gallery-caption"><span>לק ג'ל</span></div>
     </div>
 
     <!-- שקופית 5 -->
     <div class="gallery-slide">
-      <img src="work5.jpg" alt="עבודה לדוגמה 5">
-      <div class="gallery-caption">
-        <span>גבות</span>
-      </div>
+      <div class="gallery-slide-image"><img src="work5.jpg" alt="עבודה לדוגמה 5"></div>
+      <div class="gallery-caption"><span>גבות</span></div>
     </div>
 
     <!-- שקופית 6 -->
     <div class="gallery-slide">
-      <img src="work6.jpg" alt="עבודה לדוגמה 6">
-      <div class="gallery-caption">
-        <span>פדיקור רפואי</span>
-      </div>
+      <div class="gallery-slide-image"><img src="work6.jpg" alt="עבודה לדוגמה 6"></div>
+      <div class="gallery-caption"><span>פדיקור רפואי</span></div>
     </div>
 
     <!-- שקופית 7 -->
     <div class="gallery-slide">
-      <img src="work7.jpg" alt="עבודה לדוגמה 7">
-      <div class="gallery-caption">
-        <span>לק ג'ל</span>
-      </div>
+      <div class="gallery-slide-image"><img src="work7.jpg" alt="עבודה לדוגמה 7"></div>
+      <div class="gallery-caption"><span>לק ג'ל</span></div>
     </div>
 
     <!-- שקופית 8 -->
     <div class="gallery-slide">
-      <img src="work8.jpg" alt="עבודה לדוגמה 8">
-      <div class="gallery-caption">
-        <span>גבות</span>
-      </div>
+      <div class="gallery-slide-image"><img src="work8.jpg" alt="עבודה לדוגמה 8"></div>
+      <div class="gallery-caption"><span>גבות</span></div>
     </div>
 
     <!-- שקופית 9 -->
     <div class="gallery-slide">
-      <img src="work9.jpg" alt="עבודה לדוגמה 9">
-      <div class="gallery-caption">
-        <span>פדיקור רפואי</span>
-      </div>
+      <div class="gallery-slide-image"><img src="work9.jpg" alt="עבודה לדוגמה 9"></div>
+      <div class="gallery-caption"><span>פדיקור רפואי</span></div>
     </div>
 
     <!-- שקופית 10 -->
     <div class="gallery-slide">
-      <img src="work10.jpg" alt="עבודה לדוגמה 10">
-      <div class="gallery-caption">
-        <span>לק ג'ל</span>
-      </div>
+      <div class="gallery-slide-image"><img src="work10.jpg" alt="עבודה לדוגמה 10"></div>
+      <div class="gallery-caption"><span>לק ג'ל</span></div>
     </div>
 
     <!-- שקופית 11 -->
     <div class="gallery-slide">
-      <img src="work11.jpg" alt="עבודה לדוגמה 11">
-      <div class="gallery-caption">
-        <span>גבות</span>
-      </div>
+      <div class="gallery-slide-image"><img src="work11.jpg" alt="עבודה לדוגמה 11"></div>
+      <div class="gallery-caption"><span>גבות</span></div>
     </div>
 
+  </div>
+
+  <!-- ✏️ הגלגלת - כמו גלגל מספרים בכספת, גוללים אותה ימינה/שמאלה כדי להחליף תמונה -->
+  <div class="gallery-wheel-wrap">
+    <div class="gallery-wheel-pointer">▼</div>
+    <div class="gallery-wheel-track" id="galleryWheelTrack">
+      <div class="gallery-wheel-spacer"></div>
+      <div class="gallery-wheel-tick active" data-index="0">1</div>
+      <div class="gallery-wheel-tick" data-index="1">2</div>
+      <div class="gallery-wheel-tick" data-index="2">3</div>
+      <div class="gallery-wheel-tick" data-index="3">4</div>
+      <div class="gallery-wheel-tick" data-index="4">5</div>
+      <div class="gallery-wheel-tick" data-index="5">6</div>
+      <div class="gallery-wheel-tick" data-index="6">7</div>
+      <div class="gallery-wheel-tick" data-index="7">8</div>
+      <div class="gallery-wheel-tick" data-index="8">9</div>
+      <div class="gallery-wheel-tick" data-index="9">10</div>
+      <div class="gallery-wheel-tick" data-index="10">11</div>
+      <div class="gallery-wheel-spacer"></div>
+    </div>
   </div>
 </section>
 
@@ -1704,6 +1753,68 @@
   const hamburger = document.getElementById('hamburger');
   const navMenu = document.getElementById('navMenu');
   const overlay = document.getElementById('overlay');
+
+  /* ✏️ ה"גלגלת" - כמו גלגל מספרים בכספת: גוללים אותה (ביד/עכבר) והיא "נצמדת" למספר,
+     בדיוק כמו הגלריה עצמה - שני האלמנטים מסונכרנים דו-כיוונית */
+  (function initGalleryWheel(){
+    const carousel = document.getElementById('galleryCarousel');
+    const wheelTrack = document.getElementById('galleryWheelTrack');
+    if(!carousel || !wheelTrack) return;
+
+    const ticks = Array.from(wheelTrack.querySelectorAll('.gallery-wheel-tick'));
+    const slideCount = carousel.querySelectorAll('.gallery-slide').length;
+    let currentIndex = 0;
+    let syncing = false; // מונע "לולאת" עדכונים הדדית בין שני האלמנטים
+
+    function setActiveTick(idx){
+      ticks.forEach(t => t.classList.remove('active'));
+      if(ticks[idx]) ticks[idx].classList.add('active');
+    }
+
+    // לחיצה ישירה על מספר בגלגלת קופצת ישר לתמונה שלו
+    ticks.forEach(tick => {
+      tick.addEventListener('click', () => {
+        const idx = parseInt(tick.dataset.index, 10);
+        carousel.scrollTo({ left: idx * carousel.clientWidth, behavior: 'smooth' });
+      });
+    });
+
+    // גוללים את הגלגלת (ביד/עכבר) -> מזיזים את הגלריה בהתאם
+    let wheelScrollTimeout;
+    wheelTrack.addEventListener('scroll', () => {
+      if(syncing) return;
+      clearTimeout(wheelScrollTimeout);
+      wheelScrollTimeout = setTimeout(() => {
+        const tickWidth = 40; // תואם ל-flex-basis של .gallery-wheel-tick ב-CSS
+        const idx = Math.max(0, Math.min(slideCount - 1, Math.round(wheelTrack.scrollLeft / tickWidth)));
+        if(idx !== currentIndex){
+          currentIndex = idx;
+          setActiveTick(idx);
+          syncing = true;
+          carousel.scrollTo({ left: idx * carousel.clientWidth, behavior: 'smooth' });
+          setTimeout(() => { syncing = false; }, 350);
+        }
+      }, 80);
+    });
+
+    // גוללים את הגלריה עצמה (swipe על התמונה) -> מזיזים את הגלגלת בהתאם
+    let carouselScrollTimeout;
+    carousel.addEventListener('scroll', () => {
+      if(syncing) return;
+      clearTimeout(carouselScrollTimeout);
+      carouselScrollTimeout = setTimeout(() => {
+        const idx = Math.round(carousel.scrollLeft / carousel.clientWidth);
+        if(idx !== currentIndex){
+          currentIndex = idx;
+          setActiveTick(idx);
+          syncing = true;
+          const tickWidth = 40;
+          wheelTrack.scrollTo({ left: idx * tickWidth, behavior: 'smooth' });
+          setTimeout(() => { syncing = false; }, 350);
+        }
+      }, 80);
+    });
+  })();
 
   // פתיחה/סגירה של תפריט ההמבורגר
   function toggleMenu(){
