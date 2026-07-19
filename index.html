@@ -1,4 +1,4 @@
-<!-- עודכן לאחרונה: 17.7.2026, 18:27 -->
+<!-- עודכן לאחרונה: 19.7.2026, 07:33 -->
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -495,32 +495,45 @@
   /* =========================================================
      אזור "עבודות לדוגמה" - גלריית קוביות
   ========================================================= */
-  .gallery-grid{
-    display:grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
+  /* ✏️ רמז קטן מעל הגלריה - "גללי ימינה/שמאלה" */
+  .gallery-hint{
+    text-align:center;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--text-dark-soft);
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
   }
 
-  .gallery-item{
+  /* ✏️ חלונית גלריה יחידה - גוללים בין התמונות בהחלקה אופקית (כמו "גלגלת") */
+  .gallery-carousel{
+    display:flex;
+    overflow-x:auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 18px;
+    scrollbar-width: none; /* מסתיר את פס הגלילה - Firefox */
+  }
+  .gallery-carousel::-webkit-scrollbar{
+    display:none; /* מסתיר את פס הגלילה - Chrome/Safari */
+  }
+
+  .gallery-slide{
     position:relative;
+    flex: 0 0 100%;
+    scroll-snap-align: center;
     aspect-ratio: 1 / 1;
     overflow:hidden;
     border: 1px solid rgba(212,175,55,0.25);
-    cursor:pointer;
+    border-radius: 18px;
   }
 
-  .gallery-item img{
+  .gallery-slide img{
     width:100%;
     height:100%;
     object-fit:cover;
     display:block;
-    transition: transform 0.6s ease, filter 0.6s ease;
-    filter: grayscale(20%) brightness(0.85);
-  }
-
-  .gallery-item:hover img{
-    transform: scale(1.08);
-    filter: grayscale(0%) brightness(1);
+    filter: grayscale(10%) brightness(0.92);
   }
 
   .gallery-caption{
@@ -529,17 +542,10 @@
     right:0;
     left:0;
     padding: 18px 16px;
-    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-    opacity:0;
-    transform: translateY(10px);
-    transition: all 0.4s ease;
-  }
-  .gallery-item:hover .gallery-caption{
-    opacity:1;
-    transform: translateY(0);
+    background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
   }
 
-  /* ✏️ כיתובי הקוביות בגלריה - שם הטיפול שמופיע כשעוברים עם העכבר */
+  /* ✏️ כיתובי השקופיות בגלריה - שם הטיפול שמופיע מתחת לתמונה */
   .gallery-caption span{
     background: var(--gold-gradient);
     background-size: 200% auto;
@@ -1184,10 +1190,6 @@
      רספונסיביות למובייל
   ========================================================= */
   @media (max-width: 768px){
-    .gallery-grid{
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-    }
     .section{
       padding: 90px 6%;
     }
@@ -1197,9 +1199,6 @@
   }
 
   @media (max-width: 480px){
-    .gallery-grid{
-      grid-template-columns: repeat(1, 1fr);
-    }
     .logo{
       font-size: 22px;
     }
@@ -1274,9 +1273,10 @@
       padding: 140px 6%;
     }
 
-    /* הגלריה - 4 בשורה במקום 3, מנצלת טוב יותר את הרוחב הפנוי */
-    .gallery-grid{
-      grid-template-columns: repeat(4, 1fr);
+    /* ✏️ הגלריה במחשב - ממורכזת וברוחב נעים, לא נמתחת על פני כל המסך */
+    .gallery-carousel{
+      max-width: 500px;
+      margin: 0 auto;
     }
   }
 </style>
@@ -1525,55 +1525,97 @@
   <h2 class="section-title gold-metal">עבודות לדוגמה</h2>
   <div class="section-divider"></div>
 
-  <div class="gallery-grid">
+  <!-- ✏️ רמז לגלילה - אפשר לערוך את הטקסט -->
+  <div class="gallery-hint">↔ גללי ימינה / שמאלה</div>
 
-    <!-- קובייה 1 -->
-    <div class="gallery-item">
-      <!-- ✏️ להחלפת התמונה: שני את הקישור בתוך src="..." לתמונה שלך -->
-      <img src="https://images.unsplash.com/photo-1616394158624-274a4b1a4a37?w=600&q=80" alt="טיפול פנים">
+  <div class="gallery-carousel">
+
+    <!-- שקופית 1 - ✏️ שם הקובץ צריך להיות בדיוק work1.jpg, מועלה לאותה תיקייה כמו index.html -->
+    <div class="gallery-slide">
+      <img src="work1.jpg" alt="עבודה לדוגמה 1">
       <div class="gallery-caption">
         <!-- ✏️ כיתוב התמונה - שם הטיפול -->
-        <span>טיפולי פנים</span>
+        <span>לק ג'ל</span>
       </div>
     </div>
 
-    <!-- קובייה 2 -->
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1596704017254-9b121068fb31?w=600&q=80" alt="גבות וריסים">
+    <!-- שקופית 2 -->
+    <div class="gallery-slide">
+      <img src="work2.jpg" alt="עבודה לדוגמה 2">
       <div class="gallery-caption">
-        <span>גבות וריסים</span>
+        <span>גבות</span>
       </div>
     </div>
 
-    <!-- קובייה 3 -->
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=600&q=80" alt="איפור מקצועי">
+    <!-- שקופית 3 -->
+    <div class="gallery-slide">
+      <img src="work3.jpg" alt="עבודה לדוגמה 3">
       <div class="gallery-caption">
-        <span>איפור מקצועי</span>
+        <span>פדיקור רפואי</span>
       </div>
     </div>
 
-    <!-- קובייה 4 -->
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1519415943484-9fa1873496d4?w=600&q=80" alt="טיפוח ציפורניים">
+    <!-- שקופית 4 -->
+    <div class="gallery-slide">
+      <img src="work4.jpg" alt="עבודה לדוגמה 4">
       <div class="gallery-caption">
-        <span>טיפוח ציפורניים</span>
+        <span>לק ג'ל</span>
       </div>
     </div>
 
-    <!-- קובייה 5 -->
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1519669556878-63bdad8a1a49?w=600&q=80" alt="טיפולי גוף">
+    <!-- שקופית 5 -->
+    <div class="gallery-slide">
+      <img src="work5.jpg" alt="עבודה לדוגמה 5">
       <div class="gallery-caption">
-        <span>טיפולי גוף</span>
+        <span>גבות</span>
       </div>
     </div>
 
-    <!-- קובייה 6 -->
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&q=80" alt="עיצוב שיער">
+    <!-- שקופית 6 -->
+    <div class="gallery-slide">
+      <img src="work6.jpg" alt="עבודה לדוגמה 6">
       <div class="gallery-caption">
-        <span>עיצוב שיער</span>
+        <span>פדיקור רפואי</span>
+      </div>
+    </div>
+
+    <!-- שקופית 7 -->
+    <div class="gallery-slide">
+      <img src="work7.jpg" alt="עבודה לדוגמה 7">
+      <div class="gallery-caption">
+        <span>לק ג'ל</span>
+      </div>
+    </div>
+
+    <!-- שקופית 8 -->
+    <div class="gallery-slide">
+      <img src="work8.jpg" alt="עבודה לדוגמה 8">
+      <div class="gallery-caption">
+        <span>גבות</span>
+      </div>
+    </div>
+
+    <!-- שקופית 9 -->
+    <div class="gallery-slide">
+      <img src="work9.jpg" alt="עבודה לדוגמה 9">
+      <div class="gallery-caption">
+        <span>פדיקור רפואי</span>
+      </div>
+    </div>
+
+    <!-- שקופית 10 -->
+    <div class="gallery-slide">
+      <img src="work10.jpg" alt="עבודה לדוגמה 10">
+      <div class="gallery-caption">
+        <span>לק ג'ל</span>
+      </div>
+    </div>
+
+    <!-- שקופית 11 -->
+    <div class="gallery-slide">
+      <img src="work11.jpg" alt="עבודה לדוגמה 11">
+      <div class="gallery-caption">
+        <span>גבות</span>
       </div>
     </div>
 
