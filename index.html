@@ -1,4 +1,4 @@
-<!-- עודכן לאחרונה: 19.7.2026, 08:01 -->
+<!-- עודכן לאחרונה: 19.7.2026, 08:09 -->
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -1755,16 +1755,32 @@
   const overlay = document.getElementById('overlay');
 
   /* ✏️ ה"גלגלת" - כמו גלגל מספרים בכספת: גוללים אותה (ביד/עכבר) והיא "נצמדת" למספר,
-     בדיוק כמו הגלריה עצמה - שני האלמנטים מסונכרנים דו-כיוונית */
+     בדיוק כמו הגלריה עצמה - שני האלמנטים מסונכרנים דו-כיוונית.
+     שימוש ב-getBoundingClientRect/scrollIntoView במקום חישובי scrollLeft, כי scrollLeft
+     לא אמין ומתנהג אחרת בין דפדפנים כשהדף הוא RTL (עברית) - זו הייתה הסיבה לחוסר הסנכרון. */
   (function initGalleryWheel(){
     const carousel = document.getElementById('galleryCarousel');
     const wheelTrack = document.getElementById('galleryWheelTrack');
     if(!carousel || !wheelTrack) return;
 
+    const slides = Array.from(carousel.querySelectorAll('.gallery-slide'));
     const ticks = Array.from(wheelTrack.querySelectorAll('.gallery-wheel-tick'));
-    const slideCount = carousel.querySelectorAll('.gallery-slide').length;
     let currentIndex = 0;
     let syncing = false; // מונע "לולאת" עדכונים הדדית בין שני האלמנטים
+
+    // מוצאת איזה איבר (שקופית/ספרה) הכי קרוב למרכז הקונטיינר שלו כרגע
+    function centerIndexOf(container, items){
+      const containerRect = container.getBoundingClientRect();
+      const containerCenter = containerRect.left + containerRect.width / 2;
+      let closestIdx = 0, closestDist = Infinity;
+      items.forEach((item, i) => {
+        const r = item.getBoundingClientRect();
+        const itemCenter = r.left + r.width / 2;
+        const dist = Math.abs(itemCenter - containerCenter);
+        if(dist < closestDist){ closestDist = dist; closestIdx = i; }
+      });
+      return closestIdx;
+    }
 
     function setActiveTick(idx){
       ticks.forEach(t => t.classList.remove('active'));
@@ -1772,10 +1788,11 @@
     }
 
     // לחיצה ישירה על מספר בגלגלת קופצת ישר לתמונה שלו
-    ticks.forEach(tick => {
+    ticks.forEach((tick, idx) => {
       tick.addEventListener('click', () => {
-        const idx = parseInt(tick.dataset.index, 10);
-        carousel.scrollTo({ left: idx * carousel.clientWidth, behavior: 'smooth' });
+        currentIndex = idx;
+        setActiveTick(idx);
+        slides[idx].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
       });
     });
 
@@ -1785,14 +1802,15 @@
       if(syncing) return;
       clearTimeout(wheelScrollTimeout);
       wheelScrollTimeout = setTimeout(() => {
-        const tickWidth = 40; // תואם ל-flex-basis של .gallery-wheel-tick ב-CSS
-        const idx = Math.max(0, Math.min(slideCount - 1, Math.round(wheelTrack.scrollLeft / tickWidth)));
+        const idx = centerIndexOf(wheelTrack, ticks);
         if(idx !== currentIndex){
           currentIndex = idx;
           setActiveTick(idx);
           syncing = true;
-          carousel.scrollTo({ left: idx * carousel.clientWidth, behavior: 'smooth' });
-          setTimeout(() => { syncing = false; }, 350);
+          slides[idx].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+          setTimeout(() => { syncing = false; }, 400);
+        } else {
+          setActiveTick(idx); // גם בלי שינוי שקופית, מוודאים שההדגשה תמיד נכונה
         }
       }, 80);
     });
@@ -1803,14 +1821,13 @@
       if(syncing) return;
       clearTimeout(carouselScrollTimeout);
       carouselScrollTimeout = setTimeout(() => {
-        const idx = Math.round(carousel.scrollLeft / carousel.clientWidth);
+        const idx = centerIndexOf(carousel, slides);
+        setActiveTick(idx); // תמיד מעדכנים את ההדגשה לפי מה שבאמת מרכז המסך כרגע
         if(idx !== currentIndex){
           currentIndex = idx;
-          setActiveTick(idx);
           syncing = true;
-          const tickWidth = 40;
-          wheelTrack.scrollTo({ left: idx * tickWidth, behavior: 'smooth' });
-          setTimeout(() => { syncing = false; }, 350);
+          ticks[idx].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+          setTimeout(() => { syncing = false; }, 400);
         }
       }, 80);
     });
