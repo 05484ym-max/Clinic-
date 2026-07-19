@@ -1,4 +1,4 @@
-<!-- עודכן לאחרונה: 19.7.2026, 08:09 -->
+<!-- עודכן לאחרונה: 19.7.2026, ~08:16 -->
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -577,6 +577,7 @@
     overflow-x:auto;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
+    touch-action: none; /* ✏️ מבטל גלילה חופשית באצבע - הגלגלת זזה רק דרך הקוד, צעד-צעד */
     border-top: 2px solid var(--gold);
     border-bottom: 2px solid var(--gold);
     padding: 12px 0;
@@ -1787,33 +1788,59 @@
       if(ticks[idx]) ticks[idx].classList.add('active');
     }
 
+    function goToIndex(idx){
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      if(idx === currentIndex) return;
+      currentIndex = idx;
+      setActiveTick(idx);
+      syncing = true;
+      slides[idx].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+      ticks[idx].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+      setTimeout(() => { syncing = false; }, 400);
+    }
+
     // לחיצה ישירה על מספר בגלגלת קופצת ישר לתמונה שלו
     ticks.forEach((tick, idx) => {
-      tick.addEventListener('click', () => {
-        currentIndex = idx;
-        setActiveTick(idx);
-        slides[idx].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
-      });
+      tick.addEventListener('click', () => goToIndex(idx));
     });
 
-    // גוללים את הגלגלת (ביד/עכבר) -> מזיזים את הגלריה בהתאם
-    let wheelScrollTimeout;
-    wheelTrack.addEventListener('scroll', () => {
-      if(syncing) return;
-      clearTimeout(wheelScrollTimeout);
-      wheelScrollTimeout = setTimeout(() => {
-        const idx = centerIndexOf(wheelTrack, ticks);
-        if(idx !== currentIndex){
-          currentIndex = idx;
-          setActiveTick(idx);
-          syncing = true;
-          slides[idx].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
-          setTimeout(() => { syncing = false; }, 400);
-        } else {
-          setActiveTick(idx); // גם בלי שינוי שקופית, מוודאים שההדגשה תמיד נכונה
-        }
-      }, 80);
-    });
+    // ✏️ גרירה/סווייפ על הגלגלת - כל תנועה בודדת (אצבע/עכבר) מזיזה **צעד אחד בלבד**.
+    // רק אם ממשיכים לגרור ברצף (עוד תנועה אחרי שהקודמת הסתיימה) זה ממשיך למספר הבא.
+    let dragStartX = null;
+    const DRAG_THRESHOLD = 25; // פיקסלים מינימליים כדי שהתנועה תיחשב "גרירה"
+
+    function onDragStart(clientX){
+      dragStartX = clientX;
+    }
+    function onDragEnd(clientX){
+      if(dragStartX === null) return;
+      const deltaX = clientX - dragStartX;
+      dragStartX = null;
+      if(Math.abs(deltaX) < DRAG_THRESHOLD) return; // תנועה קטנה מדי - לא נחשבת
+      if(deltaX < 0){
+        goToIndex(currentIndex + 1); // גרירה שמאלה = המספר הבא
+      } else {
+        goToIndex(currentIndex - 1); // גרירה ימינה = המספר הקודם
+      }
+    }
+
+    wheelTrack.addEventListener('touchstart', (e) => onDragStart(e.touches[0].clientX), { passive:true });
+    wheelTrack.addEventListener('touchend', (e) => onDragEnd(e.changedTouches[0].clientX));
+
+    wheelTrack.addEventListener('mousedown', (e) => { e.preventDefault(); onDragStart(e.clientX); });
+    window.addEventListener('mouseup', (e) => { if(dragStartX !== null) onDragEnd(e.clientX); });
+
+    // ✏️ גלגלת עכבר/טאצ'פד - כל "צעד" גלילה מזיז מספר אחד בלבד, עם השהיה קצרה כדי
+    // שגלילה ארוכה ורציפה לא "תקפוץ" כמה מספרים בבת אחת מתוך אירוע אחד
+    let wheelCooldown = false;
+    wheelTrack.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      if(wheelCooldown) return;
+      wheelCooldown = true;
+      const delta = e.deltaY !== 0 ? e.deltaY : e.deltaX;
+      goToIndex(currentIndex + (delta > 0 ? 1 : -1));
+      setTimeout(() => { wheelCooldown = false; }, 220);
+    }, { passive:false });
 
     // גוללים את הגלריה עצמה (swipe על התמונה) -> מזיזים את הגלגלת בהתאם
     let carouselScrollTimeout;
