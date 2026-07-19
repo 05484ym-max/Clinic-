@@ -1,4 +1,4 @@
-<!-- עודכן לאחרונה: 19.7.2026, ~08:16 -->
+<!-- עודכן לאחרונה: 19.7.2026, 08:44 -->
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -502,7 +502,7 @@
     font-weight: 700;
     color: var(--text-dark-soft);
     letter-spacing: 0.5px;
-    margin-bottom: 12px;
+    margin-top: 14px;
   }
 
   /* ✏️ חלונית גלריה יחידה - גוללים בין התמונות בהחלקה אופקית */
@@ -529,6 +529,7 @@
     overflow:hidden;
     border: 1px solid rgba(212,175,55,0.25);
     border-radius: 18px;
+    background: rgba(184,134,11,0.08); /* ✏️ רקע עדין שנראה כל עוד התמונה עוד לא נטענה - בקליטה חלשה זה מונע "ריבוע לבן ריק" */
   }
   .gallery-slide img{
     width:100%;
@@ -576,8 +577,8 @@
     display:flex;
     overflow-x:auto;
     scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-    touch-action: none; /* ✏️ מבטל גלילה חופשית באצבע - הגלגלת זזה רק דרך הקוד, צעד-צעד */
     border-top: 2px solid var(--gold);
     border-bottom: 2px solid var(--gold);
     padding: 12px 0;
@@ -590,8 +591,10 @@
     flex: 0 0 calc(50% - 20px); /* מאפשר לספרה הראשונה/אחרונה "להגיע" למרכז */
   }
   .gallery-wheel-tick{
+    position:relative;
     flex: 0 0 40px;
     scroll-snap-align: center;
+    scroll-snap-stop: always; /* ✏️ מכריח עצירה בכל מספר, גם בגלילה מהירה - לא מדלג */
     text-align:center;
     font-family:'Playfair Display', serif;
     font-weight: 700;
@@ -601,6 +604,20 @@
     transition: color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
     cursor:pointer;
     user-select:none;
+  }
+  /* ✏️ קו מפריד קטן בין כל מספר לשכן שלו */
+  .gallery-wheel-tick::before{
+    content:'';
+    position:absolute;
+    top: 50%;
+    right: 100%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 14px;
+    background: rgba(184,134,11,0.35);
+  }
+  .gallery-wheel-tick:first-of-type::before{
+    display:none;
   }
   .gallery-wheel-tick.active{
     color: var(--gold-deep);
@@ -1188,8 +1205,8 @@
     color: #000;
     text-decoration:none;
     font-weight: 700;
-    font-size: 15px;
-    padding: 14px 32px;
+    font-size: 11px;
+    padding: 7px 16px;
     border-radius: 50px;
     box-shadow: 0 0 20px rgba(212,175,55,0.3);
     transition: all 0.3s ease;
@@ -1575,78 +1592,61 @@
   <h2 class="section-title gold-metal">עבודות לדוגמה</h2>
   <div class="section-divider"></div>
 
-  <!-- ✏️ רמז לגלילה - אפשר לערוך את הטקסט -->
-  <div class="gallery-hint">↔ גללי ימינה / שמאלה</div>
-
   <div class="gallery-carousel" id="galleryCarousel">
 
     <!-- שקופית 1 - ✏️ שם הקובץ צריך להיות בדיוק work1.jpg, מועלה לאותה תיקייה כמו index.html -->
     <div class="gallery-slide">
-      <div class="gallery-slide-image"><img src="work1.jpg" alt="עבודה לדוגמה 1"></div>
-      <div class="gallery-caption">
-        <!-- ✏️ כיתוב התמונה - שם הטיפול -->
-        <span>לק ג'ל</span>
-      </div>
+      <div class="gallery-slide-image"><img src="work1.jpg" alt="עבודה לדוגמה 1" loading="eager" decoding="async"></div>
     </div>
 
     <!-- שקופית 2 -->
     <div class="gallery-slide">
-      <div class="gallery-slide-image"><img src="work2.jpg" alt="עבודה לדוגמה 2"></div>
-      <div class="gallery-caption"><span>גבות</span></div>
+      <div class="gallery-slide-image"><img src="work2.jpg" alt="עבודה לדוגמה 2" loading="lazy" decoding="async"></div>
     </div>
 
     <!-- שקופית 3 -->
     <div class="gallery-slide">
-      <div class="gallery-slide-image"><img src="work3.jpg" alt="עבודה לדוגמה 3"></div>
-      <div class="gallery-caption"><span>פדיקור רפואי</span></div>
+      <div class="gallery-slide-image"><img src="work3.jpg" alt="עבודה לדוגמה 3" loading="lazy" decoding="async"></div>
     </div>
 
     <!-- שקופית 4 -->
     <div class="gallery-slide">
-      <div class="gallery-slide-image"><img src="work4.jpg" alt="עבודה לדוגמה 4"></div>
-      <div class="gallery-caption"><span>לק ג'ל</span></div>
+      <div class="gallery-slide-image"><img src="work4.jpg" alt="עבודה לדוגמה 4" loading="lazy" decoding="async"></div>
     </div>
 
     <!-- שקופית 5 -->
     <div class="gallery-slide">
-      <div class="gallery-slide-image"><img src="work5.jpg" alt="עבודה לדוגמה 5"></div>
-      <div class="gallery-caption"><span>גבות</span></div>
+      <div class="gallery-slide-image"><img src="work5.jpg" alt="עבודה לדוגמה 5" loading="lazy" decoding="async"></div>
     </div>
 
     <!-- שקופית 6 -->
     <div class="gallery-slide">
-      <div class="gallery-slide-image"><img src="work6.jpg" alt="עבודה לדוגמה 6"></div>
-      <div class="gallery-caption"><span>פדיקור רפואי</span></div>
+      <div class="gallery-slide-image"><img src="work6.jpg" alt="עבודה לדוגמה 6" loading="lazy" decoding="async"></div>
     </div>
 
     <!-- שקופית 7 -->
     <div class="gallery-slide">
-      <div class="gallery-slide-image"><img src="work7.jpg" alt="עבודה לדוגמה 7"></div>
-      <div class="gallery-caption"><span>לק ג'ל</span></div>
+      <div class="gallery-slide-image"><img src="work7.jpg" alt="עבודה לדוגמה 7" loading="lazy" decoding="async"></div>
     </div>
 
     <!-- שקופית 8 -->
     <div class="gallery-slide">
-      <div class="gallery-slide-image"><img src="work8.jpg" alt="עבודה לדוגמה 8"></div>
-      <div class="gallery-caption"><span>גבות</span></div>
+      <div class="gallery-slide-image"><img src="work8.jpg" alt="עבודה לדוגמה 8" loading="lazy" decoding="async"></div>
     </div>
 
     <!-- שקופית 9 -->
     <div class="gallery-slide">
-      <div class="gallery-slide-image"><img src="work9.jpg" alt="עבודה לדוגמה 9"></div>
-      <div class="gallery-caption"><span>פדיקור רפואי</span></div>
+      <div class="gallery-slide-image"><img src="work9.jpg" alt="עבודה לדוגמה 9" loading="lazy" decoding="async"></div>
     </div>
 
     <!-- שקופית 10 -->
     <div class="gallery-slide">
-      <div class="gallery-slide-image"><img src="work10.jpg" alt="עבודה לדוגמה 10"></div>
-      <div class="gallery-caption"><span>לק ג'ל</span></div>
+      <div class="gallery-slide-image"><img src="work10.jpg" alt="עבודה לדוגמה 10" loading="lazy" decoding="async"></div>
     </div>
 
     <!-- שקופית 11 -->
     <div class="gallery-slide">
-      <div class="gallery-slide-image"><img src="work11.jpg" alt="עבודה לדוגמה 11"></div>
-      <div class="gallery-caption"><span>גבות</span></div>
+      <div class="gallery-slide-image"><img src="work11.jpg" alt="עבודה לדוגמה 11" loading="lazy" decoding="async"></div>
     </div>
 
   </div>
@@ -1670,6 +1670,9 @@
       <div class="gallery-wheel-spacer"></div>
     </div>
   </div>
+
+  <!-- ✏️ רמז לגלילה - מתחת לגלגלת, אפשר לערוך את הטקסט -->
+  <div class="gallery-hint">→ גללי ימינה / שמאלה ←</div>
 </section>
 
 
@@ -1788,11 +1791,17 @@
       if(ticks[idx]) ticks[idx].classList.add('active');
     }
 
+    function vibrateTick(){
+      // ✏️ רטט קצר בטלפון - רק כשבאמת עוברים למספר אחר (עובד רק על מכשירים שתומכים)
+      if(navigator.vibrate) navigator.vibrate(12);
+    }
+
     function goToIndex(idx){
       idx = Math.max(0, Math.min(slides.length - 1, idx));
       if(idx === currentIndex) return;
       currentIndex = idx;
       setActiveTick(idx);
+      vibrateTick();
       syncing = true;
       slides[idx].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
       ticks[idx].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
@@ -1804,43 +1813,24 @@
       tick.addEventListener('click', () => goToIndex(idx));
     });
 
-    // ✏️ גרירה/סווייפ על הגלגלת - כל תנועה בודדת (אצבע/עכבר) מזיזה **צעד אחד בלבד**.
-    // רק אם ממשיכים לגרור ברצף (עוד תנועה אחרי שהקודמת הסתיימה) זה ממשיך למספר הבא.
-    let dragStartX = null;
-    const DRAG_THRESHOLD = 25; // פיקסלים מינימליים כדי שהתנועה תיחשב "גרירה"
-
-    function onDragStart(clientX){
-      dragStartX = clientX;
-    }
-    function onDragEnd(clientX){
-      if(dragStartX === null) return;
-      const deltaX = clientX - dragStartX;
-      dragStartX = null;
-      if(Math.abs(deltaX) < DRAG_THRESHOLD) return; // תנועה קטנה מדי - לא נחשבת
-      if(deltaX < 0){
-        goToIndex(currentIndex + 1); // גרירה שמאלה = המספר הבא
-      } else {
-        goToIndex(currentIndex - 1); // גרירה ימינה = המספר הקודם
-      }
-    }
-
-    wheelTrack.addEventListener('touchstart', (e) => onDragStart(e.touches[0].clientX), { passive:true });
-    wheelTrack.addEventListener('touchend', (e) => onDragEnd(e.changedTouches[0].clientX));
-
-    wheelTrack.addEventListener('mousedown', (e) => { e.preventDefault(); onDragStart(e.clientX); });
-    window.addEventListener('mouseup', (e) => { if(dragStartX !== null) onDragEnd(e.clientX); });
-
-    // ✏️ גלגלת עכבר/טאצ'פד - כל "צעד" גלילה מזיז מספר אחד בלבד, עם השהיה קצרה כדי
-    // שגלילה ארוכה ורציפה לא "תקפוץ" כמה מספרים בבת אחת מתוך אירוע אחד
-    let wheelCooldown = false;
-    wheelTrack.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      if(wheelCooldown) return;
-      wheelCooldown = true;
-      const delta = e.deltaY !== 0 ? e.deltaY : e.deltaX;
-      goToIndex(currentIndex + (delta > 0 ? 1 : -1));
-      setTimeout(() => { wheelCooldown = false; }, 220);
-    }, { passive:false });
+    // ✏️ גוללים את הגלגלת ביד (חלק וטבעי, עם עצירה על כל מספר בזכות scroll-snap ב-CSS)
+    // -> מזיזים את הגלריה בהתאם. עובד גם עם swipe מהיר רציף, לא רק צעד-צעד.
+    let wheelScrollTimeout;
+    wheelTrack.addEventListener('scroll', () => {
+      if(syncing) return;
+      clearTimeout(wheelScrollTimeout);
+      wheelScrollTimeout = setTimeout(() => {
+        const idx = centerIndexOf(wheelTrack, ticks);
+        setActiveTick(idx);
+        if(idx !== currentIndex){
+          currentIndex = idx;
+          vibrateTick();
+          syncing = true;
+          slides[idx].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+          setTimeout(() => { syncing = false; }, 400);
+        }
+      }, 80);
+    });
 
     // גוללים את הגלריה עצמה (swipe על התמונה) -> מזיזים את הגלגלת בהתאם
     let carouselScrollTimeout;
@@ -1852,6 +1842,7 @@
         setActiveTick(idx); // תמיד מעדכנים את ההדגשה לפי מה שבאמת מרכז המסך כרגע
         if(idx !== currentIndex){
           currentIndex = idx;
+          vibrateTick();
           syncing = true;
           ticks[idx].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
           setTimeout(() => { syncing = false; }, 400);
